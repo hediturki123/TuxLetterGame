@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<dictionnaire
+    xmlns="tux-lettergame"
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:schemaLocation='tux-lettergame dico.xsd'>
+    
+    <mot niveau="3">alambic</mot>
+    <mot niveau="2">broutille</mot>
+    <mot niveau="2">carapace</mot>
+    <mot niveau="2">drone</mot>
+    <mot niveau="4">erg</mot>
+    <mot niveau="3">étrangeté</mot>
+    <mot niveau="5">anticonstitutionnellement</mot>
+    <mot niveau="4">cuivre</mot>
+    <mot niveau="1">jus</mot>
+    <mot niveau="1">halo</mot>
+    <mot niveau="1">boîte</mot>
+    <mot niveau="3">par-dessus</mot>
+    <mot niveau="4">ubiquité</mot>
+    <mot niveau="2">antiquité</mot>
+    <mot niveau="3">paradoxe</mot>
+    <mot niveau="1">aïl</mot>
+    <mot niveau="1">fête</mot>
 
-<dictionnaire>
-    <mot niveau = "1" >bonjour</mot>
-    <mot niveau = "1" >salut</mot>
-    <mot niveau = "5" >australopitheque</mot>
-    <mot niveau = "5" >anticonstitutionnellement</mot>
-    <mot niveau = "2" >ordinateur</mot>
 </dictionnaire>

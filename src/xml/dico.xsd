@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema version="1.0"
+            targetNamespace="tux-lettergame"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="tux-lettergame"
+            elementFormDefault="qualified"
+>
+
+    <xsd:element name="dictionnaire" type="Dictionnaire"/>
+    
+    <xsd:complexType name="Dictionnaire">
+        <xsd:sequence>
+            <xsd:element name="mot" type="Mot" minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Mot">
+        <xsd:simpleContent>
+            <xsd:extension base="ContenuMot">
+                <xsd:attribute name="niveau" type="Niveau" use="required"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    
+    <xsd:simpleType name="ContenuMot">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[a-zA-ZÀ-ÿ]+-?[a-zA-ZÀ-ÿ]{2,}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="Niveau">
+        <xsd:restriction base="xsd:int">
+            <xsd:minInclusive value="1"/>
+            <xsd:maxInclusive value="5"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+</xsd:schema>
