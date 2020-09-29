@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+    version="1.0"
+    targetNamespace="http://myGame/tux"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:tux="http://myGame/tux"
+    xmlns="http://myGame/tux"
+    elementFormDefault="qualified"
+>
+    <xsd:include schemaLocation="dico.xsd"/>
+    
+    <xsd:element name="profil" type="tux:Profil"/>
+    
+    <xsd:complexType name="Profil">
+        <xsd:all>
+            <xsd:element name="nom"          type="xsd:string"/>
+            <xsd:element name="avatar"       type="xsd:string"/>
+            <xsd:element name="anniversaire" type="xsd:date"/>
+            <xsd:element name="parties"      type="Parties"/>
+        </xsd:all>
+    </xsd:complexType>
+
+    <xsd:complexType name="Parties">
+        <xsd:sequence>
+            <xsd:element name="partie" type="Partie" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Partie">
+        <xsd:complexContent>
+            <xsd:extension base="PartieContenu">
+                <xsd:attribute name="date" type="xsd:date" use="required"/>
+                <xsd:attribute name="trouvé" type="Pourcentage"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="PartieContenu">
+        <xsd:all>
+            <xsd:element name="temps" type="xsd:double" minOccurs="0"/>
+            <xsd:element name="mot"   type="tux:Mot"/>
+        </xsd:all>
+    </xsd:complexType>
+    
+    <xsd:simpleType name="Pourcentage">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="\d{1,3}%"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+</xsd:schema>

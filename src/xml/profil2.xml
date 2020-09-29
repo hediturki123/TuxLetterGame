@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<profil
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xmlns='http://myGame/tux'
+    xsi:schemaLocation='http://myGame/tux profil.xsd'
+>
+    <nom>Bill</nom>
+    <avatar>bill.png</avatar>
+    <anniversaire>1995-08-30</anniversaire>
+    <parties>
+        <partie date="2020-08-27" trouvé="50%">
+            <temps>10.0</temps>
+            <mot niveau="3">alambic</mot>
+        </partie>
+        <partie date="2020-09-27">
+            <temps>16.0</temps>
+            <mot niveau="1">halo</mot>
+        </partie>
+        <partie date="2020-09-29">
+            <mot niveau="3">paradoxe</mot>
+        </partie>
+    </parties>
+
+</profil>

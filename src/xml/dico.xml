@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dictionnaire
-    xmlns="tux-lettergame"
+    xmlns="http://myGame/tux"
     xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
-    xsi:schemaLocation='tux-lettergame dico.xsd'>
-    
+    xsi:schemaLocation='http://myGame/tux dico.xsd'
+>
+
     <mot niveau="3">alambic</mot>
     <mot niveau="2">broutille</mot>
     <mot niveau="2">carapace</mot>
@@ -21,5 +22,7 @@
     <mot niveau="3">paradoxe</mot>
     <mot niveau="1">aïl</mot>
     <mot niveau="1">fête</mot>
+    <mot niveau="1">clé</mot>
+    <mot niveau="2">indice</mot>
 
 </dictionnaire>
