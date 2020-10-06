@@ -15,6 +15,7 @@
             <body>
                 <h1>Dictionnaire du Tux Lettergame</h1>
                 <xsl:for-each select="//tux:mot[not(following-sibling::tux:mot/@niveau = @niveau)]">
+                    <xsl:sort select="@niveau"/>
                     <xsl:call-template name="niveau">
                         <xsl:with-param name="numero" select="@niveau"/>
                     </xsl:call-template>
@@ -25,12 +26,14 @@
 
     <xsl:template name="niveau">
         <xsl:param name="numero"/>
-        <h2>Niveau <xsl:value-of select="$numero"/></h2>
-        <ul>
-            <xsl:apply-templates select="//tux:mot[@niveau=$numero]">
-                <xsl:sort select="." order="ascending"/>
-            </xsl:apply-templates>
-        </ul>
+        <section class="niveau_{$numero}">
+            <h2>Niveau <xsl:value-of select="$numero"/></h2>
+            <ul>
+                <xsl:apply-templates select="//tux:mot[@niveau=$numero]">
+                    <xsl:sort select="." order="ascending"/>
+                </xsl:apply-templates>
+            </ul>
+        </section>
     </xsl:template>
 
     <xsl:template match="tux:mot">
