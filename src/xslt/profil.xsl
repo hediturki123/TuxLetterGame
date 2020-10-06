@@ -33,7 +33,7 @@ xmlns:profil="http://myGame/tux">
                     <tr>
                         <td><xsl:apply-templates select="profil:profil/profil:avatar"/></td>
                         <td><xsl:apply-templates select="profil:profil/profil:nom"/></td>
-                        <td><xsl:apply-templates select="profil:profil/profil:parties/profil:partie/profil:mot/@niveau"/></td>
+                        <td><xsl:value-of select="sum(profil:profil/profil:parties/profil:partie/profil:mot/@niveau)"/></td>
                     </tr>
        
                 </table>
@@ -45,8 +45,4 @@ xmlns:profil="http://myGame/tux">
         <xsl:value-of select="."/>
     </xsl:template>
 
-    <xsl:template match="profil:parties/profil:partie/profil:mot/@niveau">
-        <xsl:value-of select="."/>
-    </xsl:template>
-    
 </xsl:stylesheet>
