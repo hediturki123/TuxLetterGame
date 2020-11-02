@@ -1,0 +1,66 @@
+html {
+    background-image: url(../img/bg/profil.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+div.profil_parties {
+    margin-top: 2%;
+    display: flex;
+    align-items: flex-start;
+}
+
+#profil {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    box-sizing: border-box;
+    width: 25%;
+    background-color: rgba(0, 0, 0, 0.333);
+    border-radius: 0 10em 10em 0;
+}
+
+#profil > img {
+    height: auto;
+    width: 40%;
+    margin-left: 10%;
+    border-radius: 100px;
+}
+#profil > div.contenu-profil > h2 {
+    font-size: 1.66em;
+}
+
+#profil > div.contenu-profil > h3 {
+    font-weight: normal;
+}
+
+#parties {
+    box-sizing: border-box;
+    padding-left: 5%;
+    width: 75%;
+}
+
+#parties > table {
+    border-radius: 1em;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+#parties > table > tbody > tr > td,
+#parties > table > thead > tr > th {
+    padding: 1em;
+}
+
+#parties > table > tbody > tr > td:first-child + td {
+    font-size: 1.2em;
+    font-variant: small-caps;
+}
+
+#parties > table > tbody > tr > td > p {
+    margin: 0;
+}
+
+#parties > table > tbody > tr > td > p.niveau_1 { color: dodgerblue; }
+#parties > table > tbody > tr > td > p.niveau_2 { color: green; }
+#parties > table > tbody > tr > td > p.niveau_3 { color: goldenrod; }
+#parties > table > tbody > tr > td > p.niveau_4 { color: chocolate; }
+#parties > table > tbody > tr > td > p.niveau_5 { color: crimson; }

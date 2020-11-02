@@ -7,16 +7,17 @@
     xmlns="http://myGame/tux"
     elementFormDefault="qualified"
 >
-    <xsd:include schemaLocation="dico.xsd"/>
 
     <xsd:element name="dictionnaire" type="tux:Dictionnaire"/>
-    
+
+    <!-- Un dictionnaire est une liste de mots (il doit y en avoir au moins un). -->
     <xsd:complexType name="Dictionnaire">
         <xsd:sequence>
-            <xsd:element name="mot" type="tux:Mot" minOccurs="1" maxOccurs="unbounded"/>
+            <xsd:element name="mot" type="tux:Mot" maxOccurs="unbounded"/>
         </xsd:sequence>
     </xsd:complexType>
-    
+
+    <!-- Un mot possède un niveau de difficulté. -->
     <xsd:complexType name="Mot">
         <xsd:simpleContent>
             <xsd:extension base="tux:ContenuMot">
@@ -24,18 +25,23 @@
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
-    
+
+    <!--
+        Un mot doit faire au moins 3 caractères et peut contenir ou non des tirets.
+        Les caractères peuvent également être accentués.
+    -->
     <xsd:simpleType name="ContenuMot">
         <xsd:restriction base="xsd:string">
             <xsd:pattern value="[a-zA-ZÀ-ÿ]+-?[a-zA-ZÀ-ÿ]{2,}"/>
         </xsd:restriction>
     </xsd:simpleType>
-    
+
+    <!-- Un niveau peut être compris entre 1 et 5. -->
     <xsd:simpleType name="Niveau">
-        <xsd:restriction base="xsd:int">
+        <xsd:restriction base="xsd:unsignedByte">
             <xsd:minInclusive value="1"/>
             <xsd:maxInclusive value="5"/>
         </xsd:restriction>
     </xsd:simpleType>
-    
+
 </xsd:schema>
