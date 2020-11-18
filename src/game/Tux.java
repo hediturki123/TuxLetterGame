@@ -24,37 +24,51 @@ public class Tux extends EnvNode {
     }
     
     public void deplace() {
+        double targetX, targetZ;
         switch (env.getKeyDown()) {
             // Haut
             case Keyboard.KEY_Z: // Z
             case Keyboard.KEY_UP: // Flèche 'haut'
                 this.setRotateY(180);
-                this.setZ(this.getZ() - 1.0);
+                targetZ = this.getZ() - 1.0;
+                if (testeRoomCollision(this.getX(), targetZ))
+                    this.setZ(targetZ);
                 break;
                 
             // Bas
             case Keyboard.KEY_S: // S
             case Keyboard.KEY_DOWN: // Flèche 'bas'
                 this.setRotateY(0);
-                this.setZ(this.getZ() + 1.0);
+                targetZ = this.getZ() + 1.0;
+                if (testeRoomCollision(this.getX(), targetZ))
+                    this.setZ(targetZ);
                 break;
                 
             // Gauche
             case Keyboard.KEY_Q: // Q
             case Keyboard.KEY_LEFT: // Flèche 'gauche'
                 this.setRotateY(270);
-                this.setX(this.getX() - 1.0);
+                targetX = this.getX() - 1.0;
+                if (testeRoomCollision(targetX, this.getZ()))
+                    this.setX(targetX);
                 break;
                 
             // Droite
             case Keyboard.KEY_D: // D
             case Keyboard.KEY_RIGHT: // Flèche 'droite'
                 this.setRotateY(90);
-                this.setX(this.getX() + 1.0);
+                targetX = this.getX() + 1.0;
+                if (testeRoomCollision(targetX, this.getZ()))
+                    this.setX(targetX);
                 break;
                 
             default:
                 break;
         }
     }
+    
+    private boolean testeRoomCollision(double x, double z) {
+            double span = this.getScale();
+            return x <= (room.getWidth()-span) && x >= span && z >= span && z <= (room.getDepth()-span);
+        }
 }

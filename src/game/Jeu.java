@@ -1,6 +1,8 @@
 package game;
 
 import env3d.Env;
+import java.util.ArrayList;
+import java.util.List;
 import org.lwjgl.input.Keyboard;
 
 /**
@@ -12,6 +14,7 @@ public class Jeu {
     private Room room;
     private Profil profil;
     private Tux tux;
+    private List<Lettre> lettres;
 
     public Jeu() {
         // Crée un nouvel environnement
@@ -29,6 +32,9 @@ public class Jeu {
 
         // Instancie un profil par défaut
         profil = new Profil();
+        
+        // Instancie les lettres par défaut
+        lettres = new ArrayList<>();
     }
     
     public void execute() {
@@ -45,6 +51,15 @@ public class Jeu {
  
         // TEMPORAIRE : on règle la room de l'environnement. Ceci sera à enlever lorsque vous ajouterez les menus.
         env.setRoom(room);
+        
+        // TEMPORAIRE : on initialise la liste de lettres.
+        lettres.add(new Lettre('s',25.0,25.0));
+        lettres.add(new Lettre('a',25.0,75.0));
+        lettres.add(new Lettre('g',75.0,75.0));
+        lettres.add(new Lettre('e',75.0,25.0));
+        lettres.forEach(l -> {
+            env.addObject(l);
+        });
  
         // Instancie un Tux
         tux = new Tux(env,room);
