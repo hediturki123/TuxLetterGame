@@ -1,6 +1,7 @@
 package game;
 
 import env3d.Env;
+import org.lwjgl.input.Keyboard;
 
 /**
  *
@@ -10,6 +11,7 @@ public class Jeu {
     private Env env;
     private Room room;
     private Profil profil;
+    private Tux tux;
 
     public Jeu() {
         // Crée un nouvel environnement
@@ -45,8 +47,8 @@ public class Jeu {
         env.setRoom(room);
  
         // Instancie un Tux
-        // tux = new Tux();
-        // env.addObject(tux);
+        tux = new Tux(env,room);
+        env.addObject(tux);
          
         // Ici, on peut initialiser des valeurs pour une nouvelle partie
         démarrePartie(partie);
@@ -58,12 +60,12 @@ public class Jeu {
  
             // Contrôles globaux du jeu (sortie, ...)
             //1 is for escape key
-            if (env.getKey() == 1) {
+            if (env.getKey() == Keyboard.KEY_ESCAPE) {
                 finished = true;
             }
  
             // Contrôles des déplacements de Tux (gauche, droite, ...)
-            // ... (sera complété plus tard) ...
+            tux.deplace();
  
             // Ici, on applique les regles
             appliqueRegles(partie);
