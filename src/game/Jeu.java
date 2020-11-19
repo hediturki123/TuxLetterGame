@@ -15,6 +15,7 @@ public class Jeu {
     private Profil profil;
     private Tux tux;
     private List<Lettre> lettres;
+    private Dico dico;
 
     public Jeu() {
         // Crée un nouvel environnement
@@ -35,6 +36,7 @@ public class Jeu {
         
         // Instancie les lettres par défaut
         lettres = new ArrayList<>();
+        dico = new Dico("src/xml/dico.xml");
     }
     
     public void execute() {
@@ -62,7 +64,7 @@ public class Jeu {
         });
  
         // Instancie un Tux
-        tux = new Tux(env,room);
+        tux = new Tux(env, room);
         env.addObject(tux);
          
         // Ici, on peut initialiser des valeurs pour une nouvelle partie

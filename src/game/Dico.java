@@ -35,18 +35,23 @@ public class Dico {
         switch(verifieNiveau(niveau)){
             case 1 : 
                 res = getMotDepuisListe(listeNiveau1);
+                break;
                 
             case 2 : 
                 res = getMotDepuisListe(listeNiveau2);
+                break;
                 
             case 3 : 
                 res = getMotDepuisListe(listeNiveau3);
+                break;
                 
             case 4 : 
                 res = getMotDepuisListe(listeNiveau4);
+                break;
                 
             case 5 : 
                 res = getMotDepuisListe(listeNiveau5);
+                break;
                 
             default : 
                 res = "";
@@ -69,7 +74,7 @@ public class Dico {
     private int verifieNiveau(int niveau) {
         int res = -1;
         
-        if (niveau >= 1 && niveau <= 5) {
+        if ((niveau >= 1) && (niveau <= 5)) {
             res = niveau;
         }
         return res;

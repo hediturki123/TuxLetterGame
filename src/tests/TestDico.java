@@ -21,19 +21,21 @@ public class TestDico {
         dico.ajouteMotADico(1, "tu");
         
         dico.ajouteMotADico(2, "ballon");
+        dico.ajouteMotADico(2, "ballon");
     
-        dico.ajouteMotADico(3, "allons");
-        
-        dico.ajouteMotADico(4, "bibliothèque");
-        
-        dico.ajouteMotADico(5, "hippopotame");
+        dico.ajouteMotADico(3, "bibliothèque");
+        dico.ajouteMotADico(3, "bibliothèque");
         
         
-        /*for (int i = 1; i < 6; i++) {
-            System.out.println("Niveau = " + i + ", mot = " + dico.getMotDepuisListeNiveau(i));
+        
+        
+        for (int i = 1; i < 6; i++) {
+            System.out.println("Niveau = " + i);
+            for (int j = 1; j < 100; j++) {
+                System.out.println("Mot = " + dico.getMotDepuisListeNiveau(i));
+            }
         }
         
-        System.out.println("dico = " + dico.getMotDepuisListeNiveau(1));*/
 
         
         
