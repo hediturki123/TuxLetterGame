@@ -18,9 +18,13 @@ public class Lettre extends EnvNode {
         setRotateX(Math.random()*360);
         setRotateY(Math.random()*360);
         setRotateZ(Math.random()*360);
-        setTexture("models/letter/"+this.lettre+".png");
-        setModel("models/letter/cube.obj");
+        
+        if (l == ' ') {
+            setTexture("models/letter/cube.png");
+        } else {
+            setTexture("models/letter/" + this.lettre + ".png");
+        }
+        setModel("models/letter/cube.obj"); 
     }
-    
     
 }

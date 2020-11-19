@@ -56,7 +56,7 @@ public class Jeu {
         lettres.add(new Lettre('s',25.0,25.0));
         lettres.add(new Lettre('a',25.0,75.0));
         lettres.add(new Lettre('g',75.0,75.0));
-        lettres.add(new Lettre('e',75.0,25.0));
+        lettres.add(new Lettre(' ',75.0,25.0));
         lettres.forEach(l -> {
             env.addObject(l);
         });
