@@ -6,6 +6,7 @@
 package game;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  *
@@ -31,39 +32,75 @@ public class Dico {
     
     public String getMotDepuisListeNiveau(int niveau) {
         String res;
-        switch(niveau){
+        switch(verifieNiveau(niveau)){
             case 1 : 
-                res = "listeNiveau1";
-                break;
+                res = getMotDepuisListe(listeNiveau1);
                 
             case 2 : 
-                res = "listeNiveau2";
-                break;
+                res = getMotDepuisListe(listeNiveau2);
                 
             case 3 : 
-                res = "listeNiveau3";
-                break;
+                res = getMotDepuisListe(listeNiveau3);
                 
             case 4 : 
-                res = "listeNiveau4";
-                break;
+                res = getMotDepuisListe(listeNiveau4);
                 
             case 5 : 
-                res = "listeNiveau5";
-                break;
+                res = getMotDepuisListe(listeNiveau5);
+                
             default : 
                 res = "";
-                break;
         }
         return res; 
     }
     
     private String getMotDepuisListe(ArrayList<String> list) {
-        return " ";
+        String mot = "";
+        Random random = new Random();
+        int nbreAleatoire;
+        
+        if (!list.isEmpty()) {
+            nbreAleatoire = random.nextInt(list.size());
+            mot = list.get(nbreAleatoire);
+        }
+        return mot;
     }
     
     private int verifieNiveau(int niveau) {
-        return 0;
+        int res = -1;
+        
+        if (niveau >= 1 && niveau <= 5) {
+            res = niveau;
+        }
+        return res;
+    }
+    
+    public void ajouteMotADico(int niveau, String mot) {
+        
+        switch(verifieNiveau(niveau)) {
+            case 1 :
+                listeNiveau1.add(mot);
+                break;
+                
+            case 2 :
+                listeNiveau2.add(mot);
+                break;
+                
+            case 3 :
+                listeNiveau3.add(mot);
+                break;
+                
+            case 4 :
+                listeNiveau4.add(mot);
+                break;
+                
+            case 5 :
+                listeNiveau5.add(mot);
+                break;
+                
+            default : 
+        }
+        
     }
     
     
