@@ -5,11 +5,14 @@
  */
 package game;
 
-import com.sun.org.apache.xerces.internal.parsers.DOMParser;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import org.w3c.dom.Document;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 /**
@@ -113,10 +116,15 @@ public class Dico {
     }
     
     
-    public void lireDictionnaireDOM(String path, String filename) throws SAXException, IOException {
-        DOMParser parser = new DOMParser();
-        parser.parse(path + filename);
-        Document doc = parser.getDocument();
+    public void lireDictionnaireDOM(String path, String filename) throws IOException, SAXException, ParserConfigurationException {
+        File dicoXML = new File(path+filename);
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document doc = builder.parse(dicoXML);
+        // doc.getDocumentElement().normalize();
+        
+        
+        
         System.out.println(doc.getChildNodes());
     }
     
