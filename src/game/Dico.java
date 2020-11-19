@@ -5,8 +5,12 @@
  */
 package game;
 
+import com.sun.org.apache.xerces.internal.parsers.DOMParser;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -106,6 +110,14 @@ public class Dico {
             default : 
         }
         
+    }
+    
+    
+    public void lireDictionnaireDOM(String path, String filename) throws SAXException, IOException {
+        DOMParser parser = new DOMParser();
+        parser.parse(path + filename);
+        Document doc = parser.getDocument();
+        System.out.println(doc.getChildNodes());
     }
     
     

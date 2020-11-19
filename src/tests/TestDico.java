@@ -5,6 +5,8 @@
  */
 package tests;
 import game.Dico;
+import java.io.IOException;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -12,8 +14,8 @@ import game.Dico;
  */
 public class TestDico {
     
-    public static void main(String[] args) {
-        Dico dico = new Dico("");
+    public static void main(String[] args) throws SAXException, IOException {
+        Dico dico = new Dico("src/xml/dico.xml");
         
         dico.ajouteMotADico(1, "bonjour");
         dico.ajouteMotADico(1, "comment");
@@ -29,14 +31,15 @@ public class TestDico {
         
         
         
-        for (int i = 1; i < 6; i++) {
+        /*for (int i = 1; i < 6; i++) {
             System.out.println("Niveau = " + i);
             for (int j = 1; j < 100; j++) {
                 System.out.println("Mot = " + dico.getMotDepuisListeNiveau(i));
             }
-        }
+        }*/
         
-
+        dico.lireDictionnaireDOM("src/xml/", "dico.xml");
+        
         
         
     }
