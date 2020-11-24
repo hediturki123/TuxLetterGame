@@ -13,6 +13,8 @@ import org.w3c.dom.Document;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
@@ -115,17 +117,22 @@ public class Dico {
         
     }
     
-    
+    // Question 8.12
     public void lireDictionnaireDOM(String path, String filename) throws IOException, SAXException, ParserConfigurationException {
         File dicoXML = new File(path+filename);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.parse(dicoXML);
-        // doc.getDocumentElement().normalize();
         
+        NodeList mots = doc.getElementsByTagName("mot");
         
-        
-        System.out.println(doc.getChildNodes());
+        for (int i = 0; i < mots.getLength(); i++) {
+            Element motElement = (Element) mots.item(i);
+            String mot = motElement.getFirstChild().getNodeValue();
+            int niveau = Integer.parseInt(motElement.getAttribute("niveau"));
+
+            ajouteMotADico(niveau, mot);
+        }
     }
     
     

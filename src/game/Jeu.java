@@ -1,9 +1,14 @@
 package game;
 
 import env3d.Env;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
 import org.lwjgl.input.Keyboard;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -36,6 +41,8 @@ public class Jeu {
         
         // Instancie les lettres par défaut
         lettres = new ArrayList<>();
+        
+        // Instancie le dictionnaire.
         dico = new Dico("src/xml/dico.xml");
     }
     
@@ -54,11 +61,27 @@ public class Jeu {
         // TEMPORAIRE : on règle la room de l'environnement. Ceci sera à enlever lorsque vous ajouterez les menus.
         env.setRoom(room);
         
-        // TEMPORAIRE : on initialise la liste de lettres.
-        lettres.add(new Lettre('s',25.0,25.0));
-        lettres.add(new Lettre('a',25.0,75.0));
-        lettres.add(new Lettre('g',75.0,75.0));
-        lettres.add(new Lettre(' ',75.0,25.0));
+        // Lecture du dictionnaire.
+        try {
+            dico.lireDictionnaireDOM("src/xml/", "dico.xml");
+        } catch (IOException ex) {
+            Logger.getLogger(Jeu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SAXException ex) {
+            Logger.getLogger(Jeu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(Jeu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        // TEMPORAIRE : récupération d'un mot d'un niveau
+        String mot = dico.getMotDepuisListeNiveau((int) (Math.random()*4)+1);
+        
+        // On instancie la liste de lettres du mot à retrouver.
+        for (int i = 0; i < mot.length(); i++) {
+            Lettre l = new Lettre(mot.charAt(i), (Math.random()*(100-2))+2, (Math.random()*(100-2))+2);
+            lettres.add(l);
+        }
+        
+        // On ajoute les lettres à l'environnement de jeu.
         lettres.forEach(l -> {
             env.addObject(l);
         });
