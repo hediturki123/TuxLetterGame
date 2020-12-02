@@ -12,9 +12,9 @@ import org.xml.sax.SAXException;
 
 /**
  *
- * @author Alexis YVON, Hedi Turki SANEKLI
+ * @author Alexis YVON, Hedi TURKI SANEKLI
  */
-public class Jeu {
+public abstract class Jeu {
     private Env env;
     private Room room;
     private Profil profil;
@@ -91,7 +91,7 @@ public class Jeu {
         env.addObject(tux);
          
         // Ici, on peut initialiser des valeurs pour une nouvelle partie
-        démarrePartie(partie);
+        demarrePartie(partie);
          
         // Boucle de jeu
         Boolean finished;
@@ -119,9 +119,23 @@ public class Jeu {
  
     }
     
-    protected void démarrePartie(Partie partie) {}
+    abstract void demarrePartie(Partie partie);
     
-    protected void appliqueRegles(Partie partie) {}
+    abstract void appliqueRegles(Partie partie);
     
-    protected void terminePartie(Partie partie) {}
+    abstract void terminePartie(Partie partie);
+    
+    public double distance (Lettre lettre) {
+        return Math.sqrt (Math.pow(this.tux.getX() - lettre.getX(), 2) + Math.pow(this.tux.getZ() - lettre.getZ(), 2));
+    } 
+    
+    public boolean collision (Lettre lettre) {
+        boolean res = false;
+        if (distance(lettre) < tux.getScale() + lettre.getScale()) {
+            res = true;
+        }
+        return res;
+    }
+    
+    
 }

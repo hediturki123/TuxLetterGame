@@ -13,7 +13,7 @@ import org.xml.sax.SAXException;
 
 /**
  *
- * @author Alexis YVON, Hedi Turki SANEKLI
+ * @author Alexis YVON, Hedi TURKI SANEKLI
  */
 public class TestDico {
     

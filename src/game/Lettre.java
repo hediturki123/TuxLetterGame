@@ -4,7 +4,7 @@ import env3d.advanced.EnvNode;
 
 /**
  *
- * @author Alexis YVON, Hedi Turki SANEKLI
+ * @author Alexis YVON, Hedi TURKI SANEKLI
  */
 public class Lettre extends EnvNode {
     private char lettre;
