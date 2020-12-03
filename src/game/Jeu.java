@@ -6,7 +6,18 @@
 package game;
 
 import env3d.Env;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
 import org.lwjgl.input.Keyboard;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -22,7 +33,7 @@ public abstract class Jeu {
     private Tux tux;
     private final Room mainRoom;
     private final Room menuRoom;
-    private Lettre letter;
+    private List<Lettre> lettres;
     private Profil profil;
     private final Dico dico;
     protected EnvTextMap menuText;                         //text (affichage des texte du jeu)
@@ -54,8 +65,11 @@ public abstract class Jeu {
         // Instancie un profil par défaut
         profil = new Profil("");
         
+        // Instancie les lettres par défaut
+        lettres = new ArrayList<>();
+        
         // Dictionnaire
-        dico = new Dico("pathtodicofile");
+        dico = new Dico("src/xml/dico.xml");
 
         // instancie le menuText
         menuText = new EnvTextMap(env);
@@ -70,6 +84,9 @@ public abstract class Jeu {
         menuText.addText("1. Charger un profil de joueur existant ?", "Principal1", 250, 280);
         menuText.addText("2. Créer un nouveau joueur ?", "Principal2", 250, 260);
         menuText.addText("3. Sortir du jeu ?", "Principal3", 250, 240);
+        menuText.addText("Choisir un niveau : ", "Niveau", 250, 280);
+        menuText.addText("Voici le mot que vous devez trouver : ", "Mot", 250, 280);
+        
     }
 
     /**
@@ -96,6 +113,19 @@ public abstract class Jeu {
         menuText.getText("NomJoueur").clean();
         return nomJoueur;
     }
+    
+    private int getNiveau(){
+        int niveau;
+        menuText.getText("Niveau").display();
+        niveau = Integer.parseInt(menuText.getText("Niveau").lire(true));
+        menuText.getText("Niveau").clean();
+        if (niveau < 0) { 
+            niveau = 1;
+        } else if (niveau > 6) {
+            niveau = 5;
+        }
+        return niveau;
+    }
 
     
     // fourni, à compléter
@@ -104,6 +134,9 @@ public abstract class Jeu {
         MENU_VAL playTheGame;
         playTheGame = MENU_VAL.MENU_JOUE;
         Partie partie;
+        int niveau;
+        String date = getDate();
+        
         do {
             // restaure la room du menu
             env.setRoom(menuRoom);
@@ -139,7 +172,34 @@ public abstract class Jeu {
                 case Keyboard.KEY_1: // choisi un niveau et charge un mot depuis le dico
                     // .......... dico.******
                     // crée un nouvelle partie
-                    partie = new Partie("2018-09-7", "test", 1);
+                    niveau = getNiveau();
+                    menuText.getText("Niveau").display();
+
+                     // Lecture du dictionnaire.
+                    try {
+                        dico.lireDictionnaireDOM("src/xml/", "dico.xml");
+                    } catch (IOException ex) {
+                        Logger.getLogger(Jeu.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SAXException ex) {
+                        Logger.getLogger(Jeu.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ParserConfigurationException ex) {
+                        Logger.getLogger(Jeu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                    
+                    // récupération d'un mot d'un niveau
+                    String mot = dico.getMotDepuisListeNiveau(niveau);
+                    menuText.getText("Niveau").clean();
+                    menuText.getText("Mot").addTextAndDisplay("", " " + mot);
+                    Chronometre chrono = new Chronometre(5);
+
+                    chrono.start();
+                    while(chrono.remainsTime()) {}
+                    chrono.stop();
+                    //menuText.getText("Mot").clean();
+
+                    partie = new Partie(date, mot, niveau);
+                    
                     // joue
                     joue(partie);
                     // enregistre la partie dans le profil --> enregistre le profil
@@ -151,7 +211,8 @@ public abstract class Jeu {
                 // Touche 2 : Charger une partie existante
                 // -----------------------------------------                
                 case Keyboard.KEY_2: // charge une partie existante
-                    partie = new Partie("2018-09-7", "test", 1); //XXXXXXXXX
+                    
+                    partie = new Partie(date, "test", 1); //XXXXXXXXX
                     // Recupère le mot de la partie existante
                     // ..........
                     // joue
@@ -241,37 +302,45 @@ public abstract class Jeu {
 
     public void joue(Partie partie) {
 
+        // On instancie la liste de lettres du mot à retrouver.
+        for (int i = 0; i < partie.getMot().length(); i++) {
+            Lettre l = new Lettre(partie.getMot().charAt(i), (Math.random()*(100-2))+2, (Math.random()*(100-2))+2);
+            lettres.add(l);
+        }
+        
+        // On ajoute les lettres à l'environnement de jeu.
+        lettres.forEach(l -> {
+            env.addObject(l);
+        });
+ 
         // Instancie un Tux
         tux = new Tux(env, mainRoom);
         env.addObject(tux);
-
-        letter = new Lettre('a', 10, 10);
-        env.addObject(letter);
-
+         
         // Ici, on peut initialiser des valeurs pour une nouvelle partie
         demarrePartie(partie);
-
+         
         // Boucle de jeu
         Boolean finished;
         finished = false;
         while (!finished) {
-
+ 
             // Contrôles globaux du jeu (sortie, ...)
             //1 is for escape key
-            if (env.getKey() == 1) {
+            if (env.getKey() == Keyboard.KEY_ESCAPE) {
                 finished = true;
             }
-
+ 
             // Contrôles des déplacements de Tux (gauche, droite, ...)
             tux.deplace();
-
+ 
             // Ici, on applique les regles
             appliqueRegles(partie);
-
+ 
             // Fait avancer le moteur de jeu (mise à jour de l'affichage, de l'écoute des événements clavier...)
             env.advanceOneFrame();
         }
-
+ 
         // Ici on peut calculer des valeurs lorsque la partie est terminée
         terminePartie(partie);
 
@@ -282,5 +351,11 @@ public abstract class Jeu {
     protected abstract void appliqueRegles(Partie partie);
 
     protected abstract void terminePartie(Partie partie);
+    
+    public String getDate() {
+        Date date = Calendar.getInstance().getTime();  
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");  
+        return dateFormat.format(date);
+    }
 
 }
