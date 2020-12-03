@@ -14,7 +14,8 @@ public class Profil {
     private Date anniversaire;
     private ArrayList<Partie> parties;
 
-    public Profil() {
+    public Profil(String nom) {
+        this.nom = nom;
         parties = new ArrayList<Partie>();
     }
     

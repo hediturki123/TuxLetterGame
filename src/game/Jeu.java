@@ -52,7 +52,7 @@ public abstract class Jeu {
         env.setDefaultControl(false);
 
         // Instancie un profil par défaut
-        profil = new Profil();
+        profil = new Profil("");
         
         // Dictionnaire
         dico = new Dico("pathtodicofile");
@@ -226,7 +226,7 @@ public abstract class Jeu {
                 // demande le nom du nouveau joueur
                 nomJoueur = getNomJoueur();
                 // crée un profil avec le nom d'un nouveau joueur
-                profil = new Profil();//nomJoueur);
+                profil = new Profil(nomJoueur);
                 choix = menuJeu();
                 break;
 

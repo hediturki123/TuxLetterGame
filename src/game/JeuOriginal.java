@@ -41,7 +41,7 @@ public abstract class JeuOriginal {
         env.setDefaultControl(false);
 
         // Instancie un profil par défaut
-        profil = new Profil();
+        profil = new Profil("");
         
         // Instancie les lettres par défaut
         lettres = new ArrayList<>();
