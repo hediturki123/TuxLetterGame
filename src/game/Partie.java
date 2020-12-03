@@ -1,8 +1,12 @@
 package game;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
 /**
  *
- * @author Alexis YVON, Hedi Turki SANEKLI
+ * @author Alexis YVON, Hedi TURKI SANEKLI
  */
 public class Partie {
 
@@ -18,6 +22,38 @@ public class Partie {
        this.niveau = niveau;
        trouve = 0;
        temps = 0;
+    }
+    
+    public Partie(Element partieElt) {
+        Element motElt = (Element)partieElt.getElementsByTagName("mot").item(0);
+        NodeList tempsNodeList = partieElt.getElementsByTagName("temps");
+        mot = motElt.getTextContent();
+        niveau = Integer.parseInt(motElt.getAttribute("niveau"));
+        
+        if (tempsNodeList.getLength() != 1) {
+            temps = 0;
+        } else {
+            temps = Integer.parseInt(tempsNodeList.item(0).getTextContent());
+        } 
+        
+        date = partieElt.getAttribute("date");
+        String trouveString = partieElt.getAttribute("trouvé");
+        trouve = Integer.parseInt(trouveString.substring(0, trouveString.length() - 2));
+    }
+    
+    Element getPartie(Document doc) {
+        Element partieElt = doc.createElement("partie");
+        partieElt.setAttribute("date", date);
+        partieElt.setAttribute("trouvé", trouve + "%");
+        Element tempsElt = doc.createElement("temps");
+        tempsElt.setTextContent(String.format("%d.0", temps));
+        partieElt.appendChild(tempsElt);
+        Element motElt = doc.createElement("mot");
+        motElt.setTextContent(mot);
+        motElt.setAttribute("niveau", niveau + "");
+        partieElt.appendChild(motElt);
+        
+        return partieElt;
     }
     
     public void setTrouve(int nbreLettresRestantes) {

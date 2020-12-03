@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,7 +34,7 @@ public abstract class Jeu {
     private Tux tux;
     private final Room mainRoom;
     private final Room menuRoom;
-    private List<Lettre> lettres;
+    private LinkedList<Lettre> lettres;
     private Profil profil;
     private final Dico dico;
     protected EnvTextMap menuText;                         //text (affichage des texte du jeu)
@@ -66,7 +67,7 @@ public abstract class Jeu {
         profil = new Profil("");
         
         // Instancie les lettres par défaut
-        lettres = new ArrayList<>();
+        lettres = new LinkedList<>();
         
         // Dictionnaire
         dico = new Dico("src/xml/dico.xml");
@@ -102,6 +103,15 @@ public abstract class Jeu {
         } while (mainLoop != MENU_VAL.MENU_SORTIE);
         this.env.setDisplayStr("Au revoir !", 300, 30);
         env.exit();
+    }
+    
+    
+    public LinkedList<Lettre> getLettres() {
+        return lettres;
+    }
+    
+    public Env getEnv() {
+        return env;
     }
 
 
@@ -191,11 +201,11 @@ public abstract class Jeu {
                     String mot = dico.getMotDepuisListeNiveau(niveau);
                     menuText.getText("Niveau").clean();
                     menuText.getText("Mot").addTextAndDisplay("", " " + mot);
-                    Chronometre chrono = new Chronometre(5);
+                    Chronometre c = new Chronometre(5);
 
-                    chrono.start();
-                    while(chrono.remainsTime()) {}
-                    chrono.stop();
+                    c.start();
+                    while(c.remainsTime()) {}
+                    c.stop();
                     //menuText.getText("Mot").clean();
 
                     partie = new Partie(date, mot, niveau);
@@ -356,6 +366,18 @@ public abstract class Jeu {
         Date date = Calendar.getInstance().getTime();  
         DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");  
         return dateFormat.format(date);
+    }
+    
+     public double distance (Lettre lettre) {
+        return Math.sqrt (Math.pow(this.tux.getX() - lettre.getX(), 2) + Math.pow(this.tux.getZ() - lettre.getZ(), 2));
+    } 
+    
+    public boolean collision (Lettre lettre) {
+        boolean res = false;
+        if (distance(lettre) < tux.getScale() + lettre.getScale()) {
+            res = true;
+        }
+        return res;
     }
 
 }

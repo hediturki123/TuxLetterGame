@@ -111,7 +111,7 @@ public class EditeurDico {
 
     }
     
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         EditeurDico ed;
         try {
             ed = new EditeurDico("src/xml/dico.xml");
@@ -126,6 +126,6 @@ public class EditeurDico {
         }
         
         
-    }
+    }*/
 
 }

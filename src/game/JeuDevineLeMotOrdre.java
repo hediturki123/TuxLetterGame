@@ -5,6 +5,7 @@
  */
 package game;
 
+import env3d.Env;
 import java.util.ArrayList;
 
 /**
@@ -22,11 +23,16 @@ public class JeuDevineLeMotOrdre extends Jeu {
 
     protected void demarrePartie(Partie partie){
         chrono.start();
-        //nbLettresRestantes ?
+        nbLettresRestantes = getLettres().size();
     }
     
     protected void appliqueRegles(Partie partie) {
-    
+        if (chrono.remainsTime() && nbLettresRestantes > 0) {
+            if (tuxTrouveLettre()) {
+                nbLettresRestantes--;
+                getEnv().removeObject(getLettres().pollFirst());
+            }
+        }
     }
     
     protected void terminePartie(Partie partie) {
@@ -36,11 +42,12 @@ public class JeuDevineLeMotOrdre extends Jeu {
             partie.setTemps(tempsPartie);
         }
         partie.setTrouve(tempsPartie);
+        System.out.println("PARTIE TERMINEE");
     }
     
     public boolean tuxTrouveLettre() {
-        //detecte collision
-        return false; //TODO
+        //detecte collision : et renvoie 
+        return collision(getLettres().get(getLettres().size() - nbLettresRestantes)); 
     }
     
     public int getNbLettresRestantes() {
