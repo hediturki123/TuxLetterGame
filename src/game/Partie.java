@@ -32,6 +32,10 @@ public class Partie {
         return niveau;
     }
     
+    public String getMot() {
+        return mot;
+    }
+    
     @Override
     public String toString() {
         return "La date de cette partie est : " + date + ", le mot est :" + mot + ", le niveau est : " 

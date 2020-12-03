@@ -54,8 +54,6 @@ public abstract class JeuOriginal {
  
         // pour l'instant, nous nous contentons d'appeler la méthode joue comme cela
         // et nous créons une partie vide, juste pour que cela fonctionne
-        String date = getDate();
-        // TODO
         joue(new Partie("02/12/2020", "mot", 1));
          
         // Détruit l'environnement et provoque la sortie du programme 
@@ -142,13 +140,5 @@ public abstract class JeuOriginal {
         }
         return res;
     }
-    
-    
-    public String getDate() {
-        Date date = Calendar.getInstance().getTime();  
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");  
-        return dateFormat.format(date);
-    }
-    
     
 }

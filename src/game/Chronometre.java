@@ -7,6 +7,9 @@ public class Chronometre {
     private int limite;
 
     public Chronometre(int limite) {
+        begin = 0;
+        end = 0;
+        current = 0;
         this.limite = limite;
     }
     
