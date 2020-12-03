@@ -2,7 +2,11 @@ package game;
 
 import env3d.Env;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,7 +54,9 @@ public abstract class Jeu {
  
         // pour l'instant, nous nous contentons d'appeler la méthode joue comme cela
         // et nous créons une partie vide, juste pour que cela fonctionne
-        joue(new Partie());
+        String date = getDate();
+        // il faut décommenter !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //joue(new Partie(date, mot, niveau));
          
         // Détruit l'environnement et provoque la sortie du programme 
         env.exit();
@@ -135,6 +141,13 @@ public abstract class Jeu {
             res = true;
         }
         return res;
+    }
+    
+    
+    public String getDate() {
+        Date date = Calendar.getInstance().getTime();  
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");  
+        return dateFormat.format(date);
     }
     
     

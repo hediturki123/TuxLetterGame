@@ -6,9 +6,9 @@ package game;
  */
 public class Partie {
 
-    private String date;
-    private String mot;
-    private int niveau;
+    private final String date;
+    private final String mot;
+    private final int niveau;
     private int trouve;
     private int temps;    
     
@@ -21,7 +21,7 @@ public class Partie {
     }
     
     public void setTrouve(int nbreLettresRestantes) {
-       //TODO
+       trouve = (int)((mot.length() - nbreLettresRestantes) / (mot.length())) * 100 ;
     }
     
     public void setTemps(int temps) {
@@ -34,7 +34,8 @@ public class Partie {
     
     @Override
     public String toString() {
-        return "";//TODO
+        return "La date de cette partie est : " + date + ", le mot est :" + mot + ", le niveau est : " 
+                + getNiveau() + ", le temps de cette partie est de : " + temps + ", le pourcentage est de : " + trouve + " %.";
     }
     
 }
