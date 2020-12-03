@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
 
 /**
  *
- * @author Alexis YVON, Hedi Turki SANEKLI
+ * @author Alexis YVON, Hedi TURKI SANEKLI
  */
 public class Profil {
 
@@ -32,13 +32,16 @@ public class Profil {
     private String dateNaissance;
     private ArrayList<Partie> parties;
     public Document _doc;
+    private boolean present = false;
 
-    public Profil(String nom, Date dateNaissance) {
+    public Profil(String nom, String dateNaissance) {
         this.nom = nom;
+        this.dateNaissance = dateNaissance;
         parties = new ArrayList<Partie>();
+        present = true;
     }
     
-    Profil(String nomFichier) {
+    public Profil(String nomFichier) {
         _doc = fromXML(nomFichier);
         nom = _doc.getElementsByTagName("nom").item(0).getTextContent();
         avatar = _doc.getElementsByTagName("avatar").item(0).getTextContent();
@@ -48,8 +51,17 @@ public class Profil {
         for (int i = 0; i < partiesNodeList.getLength(); i++) {
             parties.add(new Partie((Element)partiesNodeList.item(i)));
         }
+        present = true;
     }
     
+    public boolean charge(String nomJoueur) {
+        if (nomJoueur.equals(nom)) {
+            present = true;
+        }
+        return present;
+    }
+    
+
     // Cree un DOM à partir d'un fichier XML
     public Document fromXML(String nomFichier) {
         try {
@@ -128,6 +140,7 @@ public class Profil {
             profilElt.appendChild(avatarElt);
             profilElt.appendChild(annivElt);
             profilElt.appendChild(partiesElt);
+            _doc.appendChild(profilElt);
             
             // Sauvegarde du document.
             toXML(filename);

@@ -9,6 +9,9 @@ import env3d.Env;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -37,7 +40,8 @@ public abstract class Jeu {
     private LinkedList<Lettre> lettres;
     private Profil profil;
     private final Dico dico;
-    protected EnvTextMap menuText;                         //text (affichage des texte du jeu)
+    protected EnvTextMap menuText;     
+    private String nomJoueur = "";//text (affichage des texte du jeu)
     
     
     
@@ -64,7 +68,7 @@ public abstract class Jeu {
         env.setDefaultControl(false);
 
         // Instancie un profil par défaut
-        profil = new Profil("");
+        profil = new Profil("inconnu", "01/01/1970");
         
         // Instancie les lettres par défaut
         lettres = new LinkedList<>();
@@ -201,17 +205,20 @@ public abstract class Jeu {
                     String mot = dico.getMotDepuisListeNiveau(niveau);
                     menuText.getText("Niveau").clean();
                     menuText.getText("Mot").addTextAndDisplay("", " " + mot);
-                    Chronometre c = new Chronometre(5);
+                    //Chronometre c = new Chronometre(5);
 
-                    c.start();
-                    while(c.remainsTime()) {}
-                    c.stop();
+                    //c.start();
+                    //while(c.remainsTime()) {}
+                    //c.stop();
                     //menuText.getText("Mot").clean();
 
                     partie = new Partie(date, mot, niveau);
+                    profil.ajouterPartie(partie);
+                    profil.sauvegarder("src/profil/" + nomJoueur + ".xml");
                     
                     // joue
                     joue(partie);
+                    menuText.getText("Mot").clean();
                     // enregistre la partie dans le profil --> enregistre le profil
                     // .......... profil.******
                     playTheGame = MENU_VAL.MENU_JOUE;
@@ -252,7 +259,7 @@ public abstract class Jeu {
     private MENU_VAL menuPrincipal() {
 
         MENU_VAL choix = MENU_VAL.MENU_CONTINUE;
-        String nomJoueur;
+        
 
         // restaure la room du menu
         env.setRoom(menuRoom);
@@ -283,11 +290,13 @@ public abstract class Jeu {
                 // demande le nom du joueur existant
                 nomJoueur = getNomJoueur();
                 // charge le profil de ce joueur si possible
-                /*if (profil.charge(nomJoueur)) {
+                profil = new Profil("src/profil/" + nomJoueur + ".xml");
+                
+                if (profil.charge(nomJoueur)) {
                     choix = menuJeu();
                 } else {
                     choix = MENU_VAL.MENU_SORTIE;//CONTINUE;
-                }*/
+                }
                 break;
 
             // -------------------------------------
@@ -297,7 +306,8 @@ public abstract class Jeu {
                 // demande le nom du nouveau joueur
                 nomJoueur = getNomJoueur();
                 // crée un profil avec le nom d'un nouveau joueur
-                profil = new Profil(nomJoueur);
+                profil = new Profil(nomJoueur, "28/05/1998");
+                profil.sauvegarder("src/profil/" + nomJoueur + ".xml");
                 choix = menuJeu();
                 break;
 
@@ -305,6 +315,9 @@ public abstract class Jeu {
             // Touche 3 : Sortir du jeu
             // -------------------------------------
             case Keyboard.KEY_3:
+                if (!nomJoueur.equals("")){
+                    profil.sauvegarder("src/profil/" + nomJoueur + ".xml");
+                }
                 choix = MENU_VAL.MENU_SORTIE;
         }
         return choix;
@@ -350,7 +363,6 @@ public abstract class Jeu {
             // Fait avancer le moteur de jeu (mise à jour de l'affichage, de l'écoute des événements clavier...)
             env.advanceOneFrame();
         }
- 
         // Ici on peut calculer des valeurs lorsque la partie est terminée
         terminePartie(partie);
 
@@ -363,9 +375,8 @@ public abstract class Jeu {
     protected abstract void terminePartie(Partie partie);
     
     public String getDate() {
-        Date date = Calendar.getInstance().getTime();  
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");  
-        return dateFormat.format(date);
+        LocalDateTime date = LocalDateTime.now();
+        return DateTimeFormatter.ofPattern("dd/MM/yyyy").format(date);
     }
     
      public double distance (Lettre lettre) {

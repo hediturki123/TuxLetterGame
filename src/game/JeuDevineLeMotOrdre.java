@@ -29,19 +29,20 @@ public class JeuDevineLeMotOrdre extends Jeu {
     protected void appliqueRegles(Partie partie) {
         if (chrono.remainsTime() && nbLettresRestantes > 0) {
             if (tuxTrouveLettre()) {
+                
                 nbLettresRestantes--;
+                
                 getEnv().removeObject(getLettres().pollFirst());
+                partie.setTrouve(nbLettresRestantes);
+                partie.setTemps(chrono.getSeconds());
+                System.out.println((int)(((partie.getMot().length() - nbLettresRestantes) / (double)partie.getMot().length())*100));
             }
         }
     }
     
     protected void terminePartie(Partie partie) {
         chrono.stop();
-        int tempsPartie = (int)chrono.getTime();
-        if (tempsPartie < LIMITE) {
-            partie.setTemps(tempsPartie);
-        }
-        partie.setTrouve(tempsPartie);
+        partie.setTemps(chrono.getSeconds());
         System.out.println("PARTIE TERMINEE");
     }
     
