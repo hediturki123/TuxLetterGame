@@ -1,6 +1,8 @@
 package game;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
@@ -10,12 +12,14 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -25,7 +29,7 @@ public class Profil {
 
     private String nom;
     private String avatar;
-    private Date dateNaissance;
+    private String dateNaissance;
     private ArrayList<Partie> parties;
     public Document _doc;
 
@@ -39,7 +43,7 @@ public class Profil {
         nom = _doc.getElementsByTagName("nom").item(0).getTextContent();
         avatar = _doc.getElementsByTagName("avatar").item(0).getTextContent();
         String xmldate = _doc.getElementsByTagName("anniversaire").item(0).getTextContent();
-        dateNaissance = new Date(Profil.xmlDateToProfileDate(xmldate));
+        dateNaissance = Profil.xmlDateToProfileDate(xmldate);
         NodeList partiesNodeList = _doc.getElementsByTagName("partie");
         for (int i = 0; i < partiesNodeList.getLength(); i++) {
             parties.add(new Partie((Element)partiesNodeList.item(i)));
@@ -50,7 +54,7 @@ public class Profil {
     public Document fromXML(String nomFichier) {
         try {
             return DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new File(nomFichier));
-        } catch (Exception ex) {
+        } catch (IOException | ParserConfigurationException | SAXException ex) {
             Logger.getLogger(Profil.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
@@ -67,7 +71,7 @@ public class Profil {
             transf.setOutputProperty(OutputKeys.INDENT, "yes");
             transf.transform(source, file);
 
-        } catch (Exception ex) {
+        } catch (IllegalArgumentException | TransformerException ex) {
             Logger.getLogger(Profil.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -77,22 +81,56 @@ public class Profil {
     }
     
     public int getDernierNiveau() {
-        return parties.get(parties.size() - 1).getNiveau();
+        return parties.get(parties.size()-1).getNiveau();
     }
 
     @Override
     public String toString() {
-        return super.toString(); //To change body of generated methods, choose Tools | Templates.
+        // TODO
+        return "";
     }
     
     public void sauvegarder(String filename) { 
         try {
-            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-            Element profilElt = doc.createElement("profil");
+            // Document de sortie.
+            _doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+            _doc.setXmlVersion("1.0");
+            _doc.createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"../xslt/profil.xsl\"");
+            
+            // Element racine "profil".
+            Element profilElt = _doc.createElement("profil");
+            
+            // Déclaration des espaces de nom utilisés par le document.
             profilElt.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns", "http://myGame/tux");
             profilElt.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
             profilElt.setAttribute("xsi:schemaLocation", "http://myGame/tux profil.xsd");
-            ///TODO
+            
+            // Création du nom.
+            Element nomElt = _doc.createElement("nom");
+            nomElt.setTextContent(nom);
+            
+            // Création de l'avatar.
+            Element avatarElt = _doc.createElement("avatar");
+            avatarElt.setTextContent(avatar);
+            
+            // Création de l'anniversaire.
+            Element annivElt = _doc.createElement("anniversaire");
+            annivElt.setTextContent(profileDateToXmlDate(dateNaissance));
+            
+            // Création de la liste des parties.
+            Element partiesElt = _doc.createElement("parties");
+            parties.forEach(p -> {
+                partiesElt.appendChild(p.getPartie(_doc));
+            });
+            
+            // Ajout de tous les éléments au profil.
+            profilElt.appendChild(nomElt);
+            profilElt.appendChild(avatarElt);
+            profilElt.appendChild(annivElt);
+            profilElt.appendChild(partiesElt);
+            
+            // Sauvegarde du document.
+            toXML(filename);
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(Profil.class.getName()).log(Level.SEVERE, null, ex);
         }
