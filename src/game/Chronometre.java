@@ -1,11 +1,8 @@
 package game;
 
-import java.util.Date;
-
 public class Chronometre {
     private long begin;
     private long end;
-    private long current;
     private int limite;
     private boolean running = false;
 
