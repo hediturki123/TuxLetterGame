@@ -9,16 +9,19 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.w3c.dom.Document;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import jdk.internal.org.xml.sax.helpers.DefaultHandler;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  *
@@ -31,8 +34,10 @@ public class Dico extends DefaultHandler {
     private ArrayList<String> listeNiveau3;
     private ArrayList<String> listeNiveau4;
     private ArrayList<String> listeNiveau5;
-    private String cheminFichierDico;
-    StringBuffer buffer;
+    private final String cheminFichierDico;
+    private StringBuffer buffer;
+    private boolean inMot;
+    private int niveauCourant;
     
     public Dico(String cheminFichierDico) {
         super();
@@ -140,40 +145,112 @@ public class Dico extends DefaultHandler {
         }
     }
     
-    /*public void lireDictionnaire() {
-   
+    public void lireDictionnaire(String cheminFichierDico) throws ParserConfigurationException, SAXException, IOException {
+        SAXParserFactory fabrique = SAXParserFactory.newInstance(); 
+        SAXParser parseur = fabrique.newSAXParser(); 
+
+        File fichier = new File(cheminFichierDico); 
+        DefaultHandler gestionnaire = this;
+        parseur.parse(fichier, gestionnaire);
     }
     
     
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-        if(qName.equals("dictionnaire")) {
-            
-        } else if (qName.equals("mot")){
-            
-        }
+        buffer = new StringBuffer();
+        if (qName.equals("mot")){
+            inMot = true;
+            try {
+                niveauCourant = Integer.parseInt(attributes.getValue("niveau"));
+                if (niveauCourant < 1 || niveauCourant > 5) {
+                    niveauCourant = 0;
+                }
+            } catch (Exception e) {
+                niveauCourant = 0;
+            }
+        }  
     }
     
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-    
+        if (qName.equals("mot")){
+            inMot = false;
+            switch(niveauCourant) {
+            case 0 :
+                switch(buffer.toString().length()) {
+                    case 3 :
+                        niveauCourant = 1;
+                        break;
+                    case 4 :
+                        niveauCourant = 2;
+                        break;
+                    case 5 :
+                        niveauCourant = 3;
+                        break;
+                    case 6 :
+                        niveauCourant = 4;
+                        break;
+                    default : 
+                        niveauCourant = 5;
+                        break;                                
+                }
+                case 1 :
+                    listeNiveau1.add(buffer.toString());
+                    break;
+                case 2 :
+                    listeNiveau2.add(buffer.toString());
+                    break;
+                case 3 :
+                    listeNiveau3.add(buffer.toString());
+                    break;
+                case 4 :
+                    listeNiveau4.add(buffer.toString());
+                    break;
+                case 5 :
+                    listeNiveau5.add(buffer.toString());
+                    break;
+            }
+            buffer = null;
+        }
+         
     }
         
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
-    
+        String lecture = new String(ch, start, length); 
+        if(buffer != null) buffer.append(lecture);
     }
 
     @Override
     public void startDocument() throws SAXException {
-    
+        listeNiveau1 = new ArrayList<>();
+        listeNiveau2 = new ArrayList<>();
+        listeNiveau3 = new ArrayList<>();
+        listeNiveau4 = new ArrayList<>();
+        listeNiveau5 = new ArrayList<>();
+        System.out.println("Début du parsing"); 
     }
 
     @Override
     public void endDocument() throws SAXException {
-    
+        System.out.println("Fin du parsing"); 
+        /*for (String mot : listeNiveau2) {
+            System.out.println(mot);
+        }*/
+        
     } 
-    */
     
+    public static void main(String[] args) {
+        Dico d = new Dico("src/xml/dico.xml");
+        try {
+            d.lireDictionnaire("src/xml/dico.xml");
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(Dico.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SAXException ex) {
+            Logger.getLogger(Dico.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Dico.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
 }

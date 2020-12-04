@@ -1,7 +1,11 @@
 package game;
 
 import env3d.Env;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
@@ -10,7 +14,9 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import org.lwjgl.input.Keyboard;
+import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
@@ -21,8 +27,10 @@ import org.xml.sax.SAXException;
 public abstract class Jeu {
 
     enum MENU_VAL {
-        MENU_SORTIE, MENU_CONTINUE, MENU_JOUE
+        MENU_SORTIE, MENU_CONTINUE, MENU_JOUE, MENU_DICO
     }
+    
+    public static final String CHEMIN_DICO = "src/xml/dico.xml";
 
     private final Env env;
     private Tux tux;
@@ -64,7 +72,7 @@ public abstract class Jeu {
         lettres = new LinkedList<>();
         
         // Dictionnaire
-        dico = new Dico("src/xml/dico.xml");
+        dico = new Dico(Jeu.CHEMIN_DICO);
 
         // instancie le menuText
         menuText = new EnvTextMap(env);
@@ -78,13 +86,16 @@ public abstract class Jeu {
         menuText.addText("Choisissez un nom de joueur : ", "NomJoueur", 200, 300);
         menuText.addText("1. Charger un profil de joueur existant ?", "Principal1", 250, 280);
         menuText.addText("2. Créer un nouveau joueur ?", "Principal2", 250, 260);
-        menuText.addText("3. Sortir du jeu ?", "Principal3", 250, 240);
+        menuText.addText("3. Gérer le dictionnaire", "GererDico", 250, 240);
+        menuText.addText("4. Sortir du jeu ?", "Principal3", 250, 220);
         menuText.addText("Choisir un niveau : ", "Niveau", 200, 300);
         menuText.addText("Mot à trouver : ", "Mot", 200, 450);
         menuText.addText("Quelle est votre date de naissance (YYYY-MM-DD) ?", "DateNaissance", 100, 300);
         menuText.addText("Gagné !!!", "Gagne", 100, 300);
         menuText.addText("Vous avez déjà trouvé tous les mots de la dernière partie !\nFaites une nouvelle partie.", "ChargerErreur", 100, 150);
-        
+        menuText.addText("1. Consulter le dictionnaire", "MenuDico1", 250, 280);
+        menuText.addText("2. Ajouter un mot au dictionnaire", "MenuDico2", 250, 260);
+        menuText.addText("3. Revenir au menu principal ?", "MenuDico3", 250, 240);
     }
 
     /**
@@ -119,6 +130,16 @@ public abstract class Jeu {
         nom = menuText.getText("NomJoueur").lire(true);
         menuText.getText("NomJoueur").clean();
         return nom;
+    }
+
+    private String getMotDico() {
+        String mot;
+        do {
+            menuText.getText("Mot").display();
+            mot = menuText.getText("Mot").lire(true);
+            menuText.getText("Mot").clean();
+        } while(mot.length() < 3);
+        return mot;
     }
     
     private int getNiveau(){
@@ -235,7 +256,7 @@ public abstract class Jeu {
 
                      // Lecture du dictionnaire.
                     try {
-                        dico.lireDictionnaireDOM("src/xml/", "dico.xml");
+                        dico.lireDictionnaire(Jeu.CHEMIN_DICO);
                     } catch (IOException | SAXException | ParserConfigurationException ex) {
                         Logger.getLogger(Jeu.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -316,10 +337,11 @@ public abstract class Jeu {
         menuText.getText("Principal1").display();
         menuText.getText("Principal2").display();
         menuText.getText("Principal3").display();
+        menuText.getText("GererDico").display();
                
         // vérifie qu'une touche 1, 2 ou 3 est pressée
         int touche = 0;
-        while (!(touche == Keyboard.KEY_1 || touche == Keyboard.KEY_2 || touche == Keyboard.KEY_3)) {
+        while (!(touche == Keyboard.KEY_1 || touche == Keyboard.KEY_2 || touche == Keyboard.KEY_3 || touche == Keyboard.KEY_4)) {
             touche = env.getKey();
             env.advanceOneFrame();
         }
@@ -328,6 +350,7 @@ public abstract class Jeu {
         menuText.getText("Principal1").clean();
         menuText.getText("Principal2").clean();
         menuText.getText("Principal3").clean();
+        menuText.getText("GererDico").clean();
 
         // et décide quoi faire en fonction de la touche pressée
         switch (touche) {
@@ -361,10 +384,64 @@ public abstract class Jeu {
             // Touche 3 : Sortir du jeu
             // -------------------------------------
             case Keyboard.KEY_3:
+                //consulter ou ajouter un mot
+                choix = menuDico();
+                break;
+            case Keyboard.KEY_4:
                 choix = MENU_VAL.MENU_SORTIE;
         }
         return choix;
     }
+    
+    
+    private MENU_VAL menuDico() {
+        
+        MENU_VAL choix = MENU_VAL.MENU_DICO;
+        EditeurDico ed = new EditeurDico(); 
+        env.setRoom(menuRoom);
+        
+        menuText.getText("Question").display();
+        menuText.getText("MenuDico1").display();
+        menuText.getText("MenuDico2").display();
+        menuText.getText("MenuDico3").display();
+        
+        int touche = 0;
+        while (!(touche == Keyboard.KEY_1 || touche == Keyboard.KEY_2 || touche == Keyboard.KEY_3)) {
+            touche = env.getKey();
+            env.advanceOneFrame();
+        }
+        
+        menuText.getText("Question").clean();
+        menuText.getText("MenuDico1").clean();
+        menuText.getText("MenuDico2").clean();
+        menuText.getText("MenuDico3").clean();
+        
+        switch(touche) {
+            case Keyboard.KEY_1:
+                affiche();
+                break;
+            case Keyboard.KEY_2:
+            {
+                try {
+                    ed.lireDOM(Jeu.CHEMIN_DICO);
+                    ed.ajouterMot(getMotDico(), getNiveau());
+                    ed.ecrireDOM(Jeu.CHEMIN_DICO);
+                    
+                } catch (ParserConfigurationException | SAXException | IOException | TransformerException | NullPointerException ex) {
+                    Logger.getLogger(Jeu.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+                break;
+
+            case Keyboard.KEY_3:
+                choix = menuPrincipal();
+                break;
+        }
+        
+        
+        return choix;
+    }
+    
 
     public void joue(Partie partie) {
 
@@ -451,6 +528,23 @@ public abstract class Jeu {
             menuText.getText(chaine).clean();
         }
         }, tempsMilli); //pour attendre 5 secondes, il faut entrer 5000
+    }
+    
+    public void affiche(){
+       try{
+            Document doc = XMLUtil.DocumentFactory.fromFile(Jeu.CHEMIN_DICO);
+             String html = XMLUtil.DocumentTransform.fromXSLTransformation("src/xml/dico.xsl",doc);
+            File file = new File("src/html/dico.html");
+            file.createNewFile();
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(html);
+            fileWriter.close();
+            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                Desktop.getDesktop().browse(new URI("src/html/dico.html"));
+            }
+      }catch(Exception e){
+          
+      }
     }
 
 }
