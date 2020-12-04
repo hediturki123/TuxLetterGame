@@ -130,11 +130,24 @@ public abstract class Jeu {
     
     private String getDateNaissance() {
         String anniv;
+        
+        // Demande de la date de naissance.
         menuText.getText("DateNaissance").display();
+        
+        // Récupération de la date au format XML (la saisie n'accepte pas le caractère "/" ; amélioration posssible).
         anniv = menuText.getText("DateNaissance").lire(true);
-        if (!anniv.matches("^(0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4}$")) anniv = "01/01/1970";
+        
+        // Si la date ne respecte pas le format XML, on l'initialise au 1er janvier 1970 par défaut.
+        if (!anniv.matches("^\\d{4}\\-(0[1-9]|1[0-2])\\-(0[1-9]|[12]\\d|3[01])$")) anniv = "1970-01-01";
+        
+        // On convertit la date au format du profil.
+        anniv = Profil.xmlDateToProfileDate(anniv);
+        
+        // On nettoie l'affichage de la demande.
         menuText.getText("DateNaissance").clean();
+
         return anniv;
+
     }
 
     
