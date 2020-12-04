@@ -81,6 +81,8 @@ public abstract class Jeu {
         menuText.addText("Choisir un niveau : ", "Niveau", 200, 300);
         menuText.addText("Mot à trouver : ", "Mot", 200, 450);
         menuText.addText("Quelle est votre date de naissance (YYYY-MM-DD) ?", "DateNaissance", 100, 300);
+        menuText.addText("Gagné !!!", "Gagne", 100, 300);
+        menuText.addText("Vous avez déjà trouvé tous les mots de la dernière partie !\nFaites une nouvelle partie.", "ChargerErreur", 100, 150);
         
     }
 
@@ -186,6 +188,10 @@ public abstract class Jeu {
 
             // restaure la room du jeu
             env.setRoom(mainRoom);
+            
+            if (!lettres.isEmpty()) {
+                lettres.clear();//On clear les lettres qui sont sur le terrain si on s'arret au milieu d'une partie et qu'on veut en lancer un nouvelle
+            }
 
             // et décide quoi faire en fonction de la touche pressée
             switch (touche) {
@@ -195,6 +201,8 @@ public abstract class Jeu {
                 case Keyboard.KEY_1: // choisi un niveau et charge un mot depuis le dico
                     // .......... dico.******
                     // crée un nouvelle partie
+                    
+                    
                     niveau = getNiveau();
                     menuText.getText("Niveau").display();
 
@@ -210,15 +218,8 @@ public abstract class Jeu {
                     menuText.getText("Niveau").clean();
                     menuText.getText("Mot").addTextAndDisplay("", " " + mot);
 
-                    new Timer().schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            menuText.getText("Mot").clean();
-                        }
-                    }, 5000);
-                    System.out.println("date : " + date);
-                    System.out.println("mot : " + mot);
-                    System.out.println("niveau : " + niveau);
+                    chrono("Mot", 5000);
+                  
                     partie = new Partie(date, mot, niveau);
                     
                     profil.sauvegarder("src/profil/" + profil.getNom() + ".xml");
@@ -235,9 +236,21 @@ public abstract class Jeu {
                 // Touche 2 : Charger une partie existante
                 // -----------------------------------------                
                 case Keyboard.KEY_2: // charge une partie existante
-                    
-                    partie = new Partie(date, "test", 1); //XXXXXXXXX
-                    // Recupère le mot de la partie existante
+                   
+                    // Charger la dernière partie faite si trouve != 100%, sinon afficher un msg dans le menu
+                    if (profil.getDernierTrouve() != 100){
+                        
+                        menuText.getText("Mot").addTextAndDisplay("", " " + profil.getDernierMot());
+
+                        chrono("Mot", 5000);
+                        
+                        partie = new Partie(date, profil.getDernierMot(), profil.getDernierNiveau()); 
+                        
+                    } else {
+                        menuText.getText("ChargerErreur").display();
+                        chrono("ChargerErreur", 5000);
+                        break;
+                    }
                     // ..........
                     // joue
                     joue(partie);
@@ -352,7 +365,13 @@ public abstract class Jeu {
  
             // Contrôles globaux du jeu (sortie, ...)
             //1 is for escape key
-            if (env.getKey() == Keyboard.KEY_ESCAPE || lettres.isEmpty()) {
+            if (env.getKey() == Keyboard.KEY_ESCAPE) {
+                finished = true;
+            }
+            
+            if (lettres.isEmpty()) { // on arrete la partie quand le joueur a trouvé ttes les lettres
+                menuText.getText("Gagne").display();
+                chrono("Gagne", 4000);
                 finished = true;
             }
  
@@ -365,6 +384,7 @@ public abstract class Jeu {
             // Fait avancer le moteur de jeu (mise à jour de l'affichage, de l'écoute des événements clavier...)
             env.advanceOneFrame();
         }
+   
         // Ici on peut calculer des valeurs lorsque la partie est terminée
         terminePartie(partie);
         
@@ -394,6 +414,15 @@ public abstract class Jeu {
             res = true;
         }
         return res;
+    }
+    
+    public void chrono(String chaine, int tempsMilli) {
+        new Timer().schedule(new TimerTask() {
+        @Override
+        public void run() {
+            menuText.getText(chaine).clean();
+        }
+        }, tempsMilli); //pour attendre 5 secondes, il faut entrer 5000
     }
 
 }

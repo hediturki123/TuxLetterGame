@@ -68,6 +68,10 @@ public class Partie {
         return niveau;
     }
     
+    public int getTrouve() {
+        return trouve;
+    }
+    
     public String getMot() {
         return mot;
     }
@@ -78,7 +82,7 @@ public class Partie {
                 "\n  Mot : " + mot + 
                 "\n  Niveau : " + niveau + 
                 "\n  Temps : " + temps + 
-                "\n  Trouvé : " + trouve + " %\n";
+                "\n  Trouvé : " + trouve + " %\n\n";
     }
     
 }

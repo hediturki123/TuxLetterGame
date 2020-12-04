@@ -102,7 +102,15 @@ public class Profil {
     }
     
     public int getDernierNiveau() {
-        return parties.get(parties.size()-1).getNiveau();
+        return parties.get(parties.size() - 1).getNiveau();
+    }
+    
+    public String getDernierMot() {
+        return parties.get(parties.size() - 1).getMot();
+    }
+    
+    public int getDernierTrouve() {
+        return parties.get(parties.size() - 1).getTrouve();
     }
 
     @Override
@@ -111,7 +119,7 @@ public class Profil {
                 " Nom : " + nom + 
                 "\n Avatar : " + avatar +
                 "\n Anniversaire " + dateNaissance +
-                "\n----> Parties :\n";
+                "\n\n----> Parties :\n";
         for (Partie p : parties) {
             res += p.toString();
         }
