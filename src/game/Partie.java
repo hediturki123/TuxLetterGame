@@ -75,10 +75,10 @@ public class Partie {
     @Override
     public String toString() {
         return "  Date : " + date + 
-                "\n  Mot :" + mot + 
+                "\n  Mot : " + mot + 
                 "\n  Niveau : " + niveau + 
                 "\n  Temps : " + temps + 
-                "\n  Trouvé : " + trouve + " %";
+                "\n  Trouvé : " + trouve + " %\n";
     }
     
 }
