@@ -85,18 +85,22 @@ public class Lettre extends EnvNode {
         return lettre;
     }
     
+    @Override
     public double getX() {
         return x;
     }
     
+    @Override
     public double getZ() {
         return z;
     }
     
+    @Override
     public void setX(double x) {
         this.x = x;
     }
     
+    @Override
     public void setZ(double z) {
         this.z = z;
     }

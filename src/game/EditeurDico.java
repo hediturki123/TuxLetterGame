@@ -2,8 +2,6 @@ package game;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -24,14 +22,14 @@ public class EditeurDico {
 
     public EditeurDico() {}
 
-    public EditeurDico(String fichier) throws ParserConfigurationException, SAXException, IOException {
-        lireDOM(fichier);
+    public EditeurDico(String cheminFichierDico) throws ParserConfigurationException, SAXException, IOException {
+        lireDOM(cheminFichierDico);
     }
     
-    public void lireDOM(String fichier) throws ParserConfigurationException, SAXException, IOException {
+    public void lireDOM(String cheminFichierDico) throws ParserConfigurationException, SAXException, IOException {
 
         // Ouverture du fichier dictionnaire dont le nom est passé en entrée.
-        File dicoXML = new File(fichier);
+        File dicoXML = new File(cheminFichierDico);
 
         // Création d'une nouvelle instance de BuilderFactory.
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -45,14 +43,14 @@ public class EditeurDico {
         // TODO : Vérification de la validité du document ?
     }
     
-    public void ecrireDOM(String fichier) throws TransformerConfigurationException, TransformerException, NullPointerException {
+    public void ecrireDOM(String cheminFichierDico) throws TransformerConfigurationException, TransformerException, NullPointerException {
 
         // On vérifie que le document que l'on veut écrire existe bien.
         if (document == null)
             throw new NullPointerException("L'éditeur de dico n'est associé à aucun document.");
 
         // Préparation du fichier dictionnaire de sortie.
-        File file = new File(fichier);
+        File file = new File(cheminFichierDico);
 
         // Création d'une nouvelle instance de TransformerFactory.
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -110,22 +108,4 @@ public class EditeurDico {
         dicoElem.appendChild(motElem);
 
     }
-    
-    /*public static void main(String[] args) {
-        EditeurDico ed;
-        try {
-            ed = new EditeurDico("src/xml/dico.xml");
-            ed.ajouterMot("brouette", 5);
-            try {
-                ed.ecrireDOM("src/xml/dico2.xml");
-            } catch (TransformerException | NullPointerException ex) {
-                Logger.getLogger(EditeurDico.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } catch (ParserConfigurationException | SAXException | IOException ex) {
-            Logger.getLogger(EditeurDico.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        
-    }*/
-
 }

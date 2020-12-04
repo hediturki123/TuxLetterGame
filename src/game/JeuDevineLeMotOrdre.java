@@ -42,23 +42,8 @@ public class JeuDevineLeMotOrdre extends Jeu {
         System.out.println("PARTIE TERMINEE");
     }
     
-    public boolean tuxTrouveLettre() {
-       
-        Lettre lettreAPrendreDeBase = getLettres().get(getLettres().size() - nbLettresRestantes);
-        /*Lettre lettreSimilaire;
-        
-        
-        for (int i = 1; i < getLettres().size(); i++) {
-            lettreSimilaire = getLettres().get(i);
-            
-            if (lettreSimilaire.getLettre() == lettreAPrendreDeBase.getLettre()) {
-                double tmp = lettreSimilaire.getX();
-                lettreSimilaire.setX(lettreAPrendreDeBase.getX());
-                lettreAPrendreDeBase.setX(tmp);
-            }
-        }*/
-        
-        return collision(lettreAPrendreDeBase); 
+    public boolean tuxTrouveLettre() {     
+        return collision(getLettres().get(getLettres().size() - nbLettresRestantes)); 
     }
     
     public int getNbLettresRestantes() {

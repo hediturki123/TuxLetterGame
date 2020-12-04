@@ -34,6 +34,7 @@ public class Profil {
     public Profil(String nom, String dateNaissance) {
         this.nom = nom;
         this.dateNaissance = dateNaissance;
+        avatar = nom+".jpg";
         parties = new ArrayList<>();
         present = true;
     }

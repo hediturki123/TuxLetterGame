@@ -3,11 +3,11 @@ package game;
 public class Chronometre {
     private long begin;
     private long end;
-    private int limite;
+    private final int LIMITE;
     private boolean running = false;
 
     public Chronometre(int limite) {
-        this.limite = limite;
+        this.LIMITE = limite;
     }
     
     public void start(){
@@ -21,14 +21,7 @@ public class Chronometre {
     }
  
     public long getTime() {
-       long elapsed;
-        if (running) {
-             elapsed = (System.currentTimeMillis() - begin);
-        }
-        else {
-            elapsed = (end - begin);
-        }
-        return elapsed;
+        return (running ? System.currentTimeMillis() : end) - begin;
     }
  
     public long getMilliseconds() {
@@ -40,18 +33,15 @@ public class Chronometre {
     }
  
     public double getMinutes() {
-        return (getSeconds()) / 60.0;
+        return getSeconds() / 60.0;
     }
  
     public double getHours() {
-        return (getMinutes()) / 60.0;
+        return getMinutes() / 60.0;
     }
     
-    /**
-    * Method to know if it remains time.
-    */
     public boolean remainsTime() {
-        return getSeconds() <= limite;
+        return getSeconds() < LIMITE;
     }
      
 }

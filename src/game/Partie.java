@@ -56,7 +56,7 @@ public class Partie {
     }
     
     public void setTrouve(int nbreLettresRestantes) {
-       trouve = (int)(((mot.length() - nbreLettresRestantes) / (double)mot.length())*100);
+       trouve = (int) (((mot.length() - nbreLettresRestantes) / (double)mot.length()) * 100);
     }
     
     public void setTemps(int temps) {

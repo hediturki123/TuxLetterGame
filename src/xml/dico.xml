@@ -1,81 +1,122 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?xml-stylesheet type="text/xsl" href="../xslt/dico.xsl"?><dictionnaire xmlns="http://myGame/tux" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://myGame/tux dico.xsd">
-        
+            
+    
     <mot niveau="3">alambic</mot>
-        
+            
+    
     <mot niveau="2">broutille</mot>
-        
+            
+    
     <mot niveau="2">carapace</mot>
-        
+            
+    
     <mot niveau="2">drone</mot>
-        
+            
+    
     <mot niveau="4">erg</mot>
-        
+            
+    
     <mot niveau="3">étrangeté</mot>
-        
+            
+    
     <mot niveau="5">anticonstitutionnellement</mot>
-        
+            
+    
     <mot niveau="4">cuivre</mot>
-        
+            
+    
     <mot niveau="1">jus</mot>
-        
+            
+    
     <mot niveau="1">halo</mot>
-        
+            
+    
     <mot niveau="1">boîte</mot>
-        
+            
+    
     <mot niveau="3">par-dessus</mot>
-        
+            
+    
     <mot niveau="4">ubiquité</mot>
-        
+            
+    
     <mot niveau="2">antiquité</mot>
-        
+            
+    
     <mot niveau="3">paradoxe</mot>
-        
+            
+    
     <mot niveau="1">aïl</mot>
-        
+            
+    
     <mot niveau="1">fête</mot>
-        
+            
+    
     <mot niveau="1">clé</mot>
-        
+            
+    
     <mot niveau="2">indice</mot>
-        
+            
+    
     <mot niveau="3">uluberlu</mot>
-        
+            
+    
     <mot niveau="4">sémantique</mot>
-        
+            
+    
     <mot niveau="3">ergonomie</mot>
-        
+            
+    
     <mot niveau="2">virus</mot>
-        
+            
+    
     <mot niveau="1">art</mot>
-        
+            
+    
     <mot niveau="4">coulrophobie</mot>
-        
+            
+    
     <mot niveau="2">avatar</mot>
-        
+            
+    
     <mot niveau="3">entropie</mot>
-        
+            
+    
     <mot niveau="5">antépénultième</mot>
-        
+            
+    
     <mot niveau="3">quidam</mot>
-        
+            
+    
     <mot niveau="4">verdoyant</mot>
-        
+            
+    
     <mot niveau="4">tungstène</mot>
-        
+            
+    
     <mot niveau="5">xylophoniste</mot>
-        
+            
+    
     <mot niveau="2">belle-mère</mot>
-        
+            
+    
     <mot niveau="3">galon</mot>
-        
+            
+    
     <mot niveau="1">bain</mot>
-        
+            
+    
     <mot niveau="4">panthéon</mot>
-        
+            
+    
     <mot niveau="2">espace</mot>
-        
+            
+    
     <mot niveau="1">prix</mot>
+        
     
     <mot niveau="2">cahier</mot>
+    
+    <mot niveau="4">habitacle</mot>
 </dictionnaire>

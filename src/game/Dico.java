@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package game;
 
 import java.io.File;
@@ -50,30 +45,14 @@ public class Dico extends DefaultHandler {
     } 
     
     public String getMotDepuisListeNiveau(int niveau) {
-        String res;
-        switch(verifieNiveau(niveau)){
-            case 1 : 
-                res = getMotDepuisListe(listeNiveau1);
-                break;
-                
-            case 2 : 
-                res = getMotDepuisListe(listeNiveau2);
-                break;
-                
-            case 3 : 
-                res = getMotDepuisListe(listeNiveau3);
-                break;
-                
-            case 4 : 
-                res = getMotDepuisListe(listeNiveau4);
-                break;
-                
-            case 5 : 
-                res = getMotDepuisListe(listeNiveau5);
-                break;
-                
-            default : 
-                res = "";
+        String res = "";
+        switch (verifieNiveau(niveau)) {
+            case 1: res = getMotDepuisListe(listeNiveau1); break;   
+            case 2: res = getMotDepuisListe(listeNiveau2); break;
+            case 3: res = getMotDepuisListe(listeNiveau3); break;
+            case 4: res = getMotDepuisListe(listeNiveau4); break;
+            case 5: res = getMotDepuisListe(listeNiveau5); break;       
+            default: break;
         }
         return res; 
     }
@@ -91,51 +70,38 @@ public class Dico extends DefaultHandler {
     }
     
     private int verifieNiveau(int niveau) {
-        int res = -1;
-        
-        if ((niveau >= 1) && (niveau <= 5)) {
-            res = niveau;
-        }
+        int res = 0;
+        if ((niveau >= 1) && (niveau <= 5)) res = niveau;
         return res;
     }
     
     public void ajouteMotADico(int niveau, String mot) {
         
+        // Si la taille du mot ne fait pas au moins 3 lettres, on ignore son ajout.
+        if (mot.length() < 3) return;
+        
+        // On ajoute le mot en fonction de son niveau.
         switch(verifieNiveau(niveau)) {
-            case 1 :
-                listeNiveau1.add(mot);
-                break;
-                
-            case 2 :
-                listeNiveau2.add(mot);
-                break;
-                
-            case 3 :
-                listeNiveau3.add(mot);
-                break;
-                
-            case 4 :
-                listeNiveau4.add(mot);
-                break;
-                
-            case 5 :
-                listeNiveau5.add(mot);
-                break;
-                
-            default : 
+            case 1: listeNiveau1.add(mot); break;
+            case 2: listeNiveau2.add(mot); break;       
+            case 3: listeNiveau3.add(mot); break;       
+            case 4: listeNiveau4.add(mot); break;      
+            case 5: listeNiveau5.add(mot); break;   
+            default: break;
         }
         
     }
     
-    // Question 8.12
-    public void lireDictionnaireDOM(String path, String filename) throws IOException, SAXException, ParserConfigurationException {
-        File dicoXML = new File(path + filename);
+    public void lireDictionnaireDOM(String cheminFichierDico) throws IOException, SAXException, ParserConfigurationException {
+        File dicoXML = new File(cheminFichierDico);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.parse(dicoXML);
         
+        // Liste des mots récupérés depuis le fichier.
         NodeList mots = doc.getElementsByTagName("mot");
         
+        // Pour chaque mot, on les ajoute au dictionnaire.
         for (int i = 0; i < mots.getLength(); i++) {
             Element motElement = (Element) mots.item(i);
             String mot = motElement.getFirstChild().getNodeValue();
@@ -143,6 +109,14 @@ public class Dico extends DefaultHandler {
 
             ajouteMotADico(niveau, mot);
         }
+    }
+    
+    public void lireDictionnaireDOM(String path, String filename) throws IOException, SAXException, ParserConfigurationException {
+        lireDictionnaireDOM(path+filename);
+    }
+    
+    public void lireDictionnaireDOM() throws IOException, SAXException, ParserConfigurationException {
+        lireDictionnaireDOM(cheminFichierDico);
     }
     
     public void lireDictionnaire(String cheminFichierDico) throws ParserConfigurationException, SAXException, IOException {
@@ -154,18 +128,20 @@ public class Dico extends DefaultHandler {
         parseur.parse(fichier, gestionnaire);
     }
     
+    public void lireDictionnaire() throws ParserConfigurationException, SAXException, IOException {
+        lireDictionnaire(cheminFichierDico);
+    }
+    
     
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         buffer = new StringBuffer();
-        if (qName.equals("mot")){
+        if (qName.equals("mot")) {
             inMot = true;
             try {
                 niveauCourant = Integer.parseInt(attributes.getValue("niveau"));
-                if (niveauCourant < 1 || niveauCourant > 5) {
-                    niveauCourant = 0;
-                }
-            } catch (Exception e) {
+                if (niveauCourant < 1 || niveauCourant > 5)  niveauCourant = 0;
+            } catch (NumberFormatException e) {
                 niveauCourant = 0;
             }
         }  
@@ -174,41 +150,19 @@ public class Dico extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (qName.equals("mot")){
+            int bufLen = buffer.toString().length();
             inMot = false;
             switch(niveauCourant) {
-            case 0 :
-                switch(buffer.toString().length()) {
-                    case 3 :
-                        niveauCourant = 1;
-                        break;
-                    case 4 :
-                        niveauCourant = 2;
-                        break;
-                    case 5 :
-                        niveauCourant = 3;
-                        break;
-                    case 6 :
-                        niveauCourant = 4;
-                        break;
-                    default : 
-                        niveauCourant = 5;
-                        break;                                
-                }
-                case 1 :
-                    listeNiveau1.add(buffer.toString());
-                    break;
-                case 2 :
-                    listeNiveau2.add(buffer.toString());
-                    break;
-                case 3 :
-                    listeNiveau3.add(buffer.toString());
-                    break;
-                case 4 :
-                    listeNiveau4.add(buffer.toString());
-                    break;
-                case 5 :
-                    listeNiveau5.add(buffer.toString());
-                    break;
+                case 0 :
+                    if (bufLen > 7) niveauCourant = 5;
+                    else niveauCourant = bufLen - 2;
+                    // On ne fait pas de break pour pouvoir prendre en compte le nouveau niveau.
+                case 1: listeNiveau1.add(buffer.toString()); break;
+                case 2: listeNiveau2.add(buffer.toString()); break;
+                case 3: listeNiveau3.add(buffer.toString()); break;
+                case 4: listeNiveau4.add(buffer.toString()); break;
+                case 5: listeNiveau5.add(buffer.toString()); break;
+                default: break;
             }
             buffer = null;
         }
@@ -228,29 +182,9 @@ public class Dico extends DefaultHandler {
         listeNiveau3 = new ArrayList<>();
         listeNiveau4 = new ArrayList<>();
         listeNiveau5 = new ArrayList<>();
-        System.out.println("Début du parsing"); 
     }
 
     @Override
-    public void endDocument() throws SAXException {
-        System.out.println("Fin du parsing"); 
-        /*for (String mot : listeNiveau2) {
-            System.out.println(mot);
-        }*/
-        
-    } 
-    
-    public static void main(String[] args) {
-        Dico d = new Dico("src/xml/dico.xml");
-        try {
-            d.lireDictionnaire("src/xml/dico.xml");
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(Dico.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SAXException ex) {
-            Logger.getLogger(Dico.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(Dico.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
+    public void endDocument() throws SAXException {} 
+
 }
