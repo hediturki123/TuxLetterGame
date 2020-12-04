@@ -1,22 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package game;
 
 import env3d.Env;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
@@ -40,8 +30,7 @@ public abstract class Jeu {
     private LinkedList<Lettre> lettres;
     private Profil profil;
     private final Dico dico;
-    protected EnvTextMap menuText;     
-    private String nomJoueur = "";//text (affichage des texte du jeu)
+    protected EnvTextMap menuText;
     
     
     
@@ -89,8 +78,9 @@ public abstract class Jeu {
         menuText.addText("1. Charger un profil de joueur existant ?", "Principal1", 250, 280);
         menuText.addText("2. Créer un nouveau joueur ?", "Principal2", 250, 260);
         menuText.addText("3. Sortir du jeu ?", "Principal3", 250, 240);
-        menuText.addText("Choisir un niveau : ", "Niveau", 250, 280);
-        menuText.addText("Voici le mot que vous devez trouver : ", "Mot", 250, 280);
+        menuText.addText("Choisir un niveau : ", "Niveau", 200, 300);
+        menuText.addText("Mot à trouver : ", "Mot", 200, 450);
+        menuText.addText("Quelle est votre date de naissance ?", "DateNaissance", 200, 300);
         
     }
 
@@ -121,11 +111,11 @@ public abstract class Jeu {
 
     // fourni
     private String getNomJoueur() {
-        String nomJoueur = "";
+        String nom;
         menuText.getText("NomJoueur").display();
-        nomJoueur = menuText.getText("NomJoueur").lire(true);
+        nom = menuText.getText("NomJoueur").lire(true);
         menuText.getText("NomJoueur").clean();
-        return nomJoueur;
+        return nom;
     }
     
     private int getNiveau(){
@@ -133,12 +123,18 @@ public abstract class Jeu {
         menuText.getText("Niveau").display();
         niveau = Integer.parseInt(menuText.getText("Niveau").lire(true));
         menuText.getText("Niveau").clean();
-        if (niveau < 0) { 
-            niveau = 1;
-        } else if (niveau > 6) {
-            niveau = 5;
-        }
+        if (niveau < 0) niveau = 1;
+        else if (niveau > 6) niveau = 5;
         return niveau;
+    }
+    
+    private String getDateNaissance() {
+        String anniv;
+        menuText.getText("DateNaissance").display();
+        anniv = menuText.getText("DateNaissance").lire(true);
+        if (!anniv.matches("^(0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4}$")) anniv = "01/01/1970";
+        menuText.getText("DateNaissance").clean();
+        return anniv;
     }
 
     
@@ -192,37 +188,33 @@ public abstract class Jeu {
                      // Lecture du dictionnaire.
                     try {
                         dico.lireDictionnaireDOM("src/xml/", "dico.xml");
-                    } catch (IOException ex) {
-                        Logger.getLogger(Jeu.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (SAXException ex) {
-                        Logger.getLogger(Jeu.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (ParserConfigurationException ex) {
+                    } catch (IOException | SAXException | ParserConfigurationException ex) {
                         Logger.getLogger(Jeu.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    
                     
                     // récupération d'un mot d'un niveau
                     String mot = dico.getMotDepuisListeNiveau(niveau);
                     menuText.getText("Niveau").clean();
                     menuText.getText("Mot").addTextAndDisplay("", " " + mot);
-                    //Chronometre c = new Chronometre(5);
 
-                    //c.start();
-                    //while(c.remainsTime()) {}
-                    //c.stop();
-                    //menuText.getText("Mot").clean();
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            menuText.getText("Mot").clean();
+                        }
+                    }, 5000);
 
                     partie = new Partie(date, mot, niveau);
-                    profil.ajouterPartie(partie);
-                    profil.sauvegarder("src/profil/" + nomJoueur + ".xml");
+                    
+                    profil.sauvegarder("src/profil/" + profil.getNom() + ".xml");
                     
                     // joue
                     joue(partie);
-                    menuText.getText("Mot").clean();
                     // enregistre la partie dans le profil --> enregistre le profil
                     // .......... profil.******
                     playTheGame = MENU_VAL.MENU_JOUE;
                     break;
+
 
                 // -----------------------------------------
                 // Touche 2 : Charger une partie existante
@@ -288,11 +280,11 @@ public abstract class Jeu {
             // -------------------------------------
             case Keyboard.KEY_1:
                 // demande le nom du joueur existant
-                nomJoueur = getNomJoueur();
+                String nom = getNomJoueur();
                 // charge le profil de ce joueur si possible
-                profil = new Profil("src/profil/" + nomJoueur + ".xml");
+                profil = new Profil("src/profil/" + nom + ".xml");
                 
-                if (profil.charge(nomJoueur)) {
+                if (profil.charge(nom)) {
                     choix = menuJeu();
                 } else {
                     choix = MENU_VAL.MENU_SORTIE;//CONTINUE;
@@ -302,12 +294,10 @@ public abstract class Jeu {
             // -------------------------------------
             // Touche 2 : Créer un nouveau joueur
             // -------------------------------------
-            case Keyboard.KEY_2:
-                // demande le nom du nouveau joueur
-                nomJoueur = getNomJoueur();
+            case Keyboard.KEY_2:            
                 // crée un profil avec le nom d'un nouveau joueur
-                profil = new Profil(nomJoueur, "28/05/1998");
-                profil.sauvegarder("src/profil/" + nomJoueur + ".xml");
+                profil = new Profil(getNomJoueur(), getDateNaissance());
+                profil.sauvegarder("src/profil/" + profil.getNom() + ".xml");
                 choix = menuJeu();
                 break;
 
@@ -315,9 +305,6 @@ public abstract class Jeu {
             // Touche 3 : Sortir du jeu
             // -------------------------------------
             case Keyboard.KEY_3:
-                if (!nomJoueur.equals("")){
-                    profil.sauvegarder("src/profil/" + nomJoueur + ".xml");
-                }
                 choix = MENU_VAL.MENU_SORTIE;
         }
         return choix;
@@ -350,7 +337,7 @@ public abstract class Jeu {
  
             // Contrôles globaux du jeu (sortie, ...)
             //1 is for escape key
-            if (env.getKey() == Keyboard.KEY_ESCAPE) {
+            if (env.getKey() == Keyboard.KEY_ESCAPE || lettres.isEmpty()) {
                 finished = true;
             }
  
@@ -365,6 +352,9 @@ public abstract class Jeu {
         }
         // Ici on peut calculer des valeurs lorsque la partie est terminée
         terminePartie(partie);
+        
+        profil.ajouterPartie(partie);
+        profil.sauvegarder("src/profil/"+profil.getNom()+".xml");
 
     }
 

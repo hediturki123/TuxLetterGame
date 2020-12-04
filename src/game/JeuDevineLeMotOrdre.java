@@ -5,9 +5,6 @@
  */
 package game;
 
-import env3d.Env;
-import java.util.ArrayList;
-
 /**
  *
  * @author Alexis YVON, Hedi TURKI SANEKLI
@@ -15,33 +12,32 @@ import java.util.ArrayList;
 public class JeuDevineLeMotOrdre extends Jeu {
     private int nbLettresRestantes;
     private Chronometre chrono;
-    private static int LIMITE = 30;
+    private static final int LIMITE = 30;
     
     public JeuDevineLeMotOrdre() {
         chrono = new Chronometre(LIMITE);
     }
 
+    @Override
     protected void demarrePartie(Partie partie){
         chrono.start();
         nbLettresRestantes = getLettres().size();
     }
     
+    @Override
     protected void appliqueRegles(Partie partie) {
         if (chrono.remainsTime() && nbLettresRestantes > 0) {
             if (tuxTrouveLettre()) {
-                
-                nbLettresRestantes--;
-                
                 getEnv().removeObject(getLettres().pollFirst());
-                partie.setTrouve(nbLettresRestantes);
-                partie.setTemps(chrono.getSeconds());
-                System.out.println((int)(((partie.getMot().length() - nbLettresRestantes) / (double)partie.getMot().length())*100));
+                nbLettresRestantes--;
             }
         }
     }
     
+    @Override
     protected void terminePartie(Partie partie) {
         chrono.stop();
+        partie.setTrouve(nbLettresRestantes);
         partie.setTemps(chrono.getSeconds());
         System.out.println("PARTIE TERMINEE");
     }

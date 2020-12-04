@@ -2,16 +2,13 @@ package game;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -37,7 +34,7 @@ public class Profil {
     public Profil(String nom, String dateNaissance) {
         this.nom = nom;
         this.dateNaissance = dateNaissance;
-        parties = new ArrayList<Partie>();
+        parties = new ArrayList<>();
         present = true;
     }
     
@@ -61,6 +58,9 @@ public class Profil {
         return present;
     }
     
+    public String getNom() {
+        return nom;
+    }
 
     // Cree un DOM à partir d'un fichier XML
     public Document fromXML(String nomFichier) {
@@ -81,6 +81,7 @@ public class Profil {
             StreamResult file = new StreamResult(new File(nomFichier));
             transf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             transf.setOutputProperty(OutputKeys.INDENT, "yes");
+            transf.setOutputProperty(OutputKeys.STANDALONE, "yes");
             transf.transform(source, file);
 
         } catch (IllegalArgumentException | TransformerException ex) {
@@ -108,6 +109,7 @@ public class Profil {
             _doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
             _doc.setXmlVersion("1.0");
             _doc.createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"../xslt/profil.xsl\"");
+            _doc.setXmlStandalone(true);
             
             // Element racine "profil".
             Element profilElt = _doc.createElement("profil");
