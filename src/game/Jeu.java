@@ -15,8 +15,9 @@ import org.xml.sax.SAXException;
 
 /**
  *
- * @author gladen
+ * @author Alexis YVON, Hedi TURKI SANEKLI
  */
+
 public abstract class Jeu {
 
     enum MENU_VAL {
@@ -212,10 +213,9 @@ public abstract class Jeu {
             menuText.getText("Jeu4").clean();
 
             // restaure la room du jeu
-            
-            
             if (!lettres.isEmpty()) {
-                lettres.clear();//On clear les lettres qui sont sur le terrain si on s'arret au milieu d'une partie et qu'on veut en lancer un nouvelle
+                lettres.clear();
+                //On clear les lettres qui sont sur le terrain si on s'arrete au milieu d'une partie et qu'on veut en lancer un nouvelle
             }
 
             // et décide quoi faire en fonction de la touche pressée
@@ -412,7 +412,6 @@ public abstract class Jeu {
             // Fait avancer le moteur de jeu (mise à jour de l'affichage, de l'écoute des événements clavier...)
             env.advanceOneFrame();
         }
-   
         // Ici on peut calculer des valeurs lorsque la partie est terminée
         terminePartie(partie);
         
@@ -438,6 +437,7 @@ public abstract class Jeu {
     
     public boolean collision (Lettre lettre) {
         boolean res = false;
+        char l1 = lettre.getLettre();
         if (distance(lettre) < tux.getScale() + lettre.getScale()) {
             res = true;
         }

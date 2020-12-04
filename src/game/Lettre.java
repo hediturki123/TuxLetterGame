@@ -8,9 +8,13 @@ import env3d.advanced.EnvNode;
  */
 public class Lettre extends EnvNode {
     private char lettre;
+    private double x;
+    private double z;
 
     public Lettre(char l, double x, double z) {
         lettre = l;
+        this.x = x;
+        this.z = z;
         setScale(2.0);
         setX(x);
         setZ(z);
@@ -76,5 +80,27 @@ public class Lettre extends EnvNode {
         }
         setModel("models/letter/cube.obj"); 
     }
+    
+    public char getLettre() {
+        return lettre;
+    }
+    
+    public double getX() {
+        return x;
+    }
+    
+    public double getZ() {
+        return z;
+    }
+    
+    public void setX(double x) {
+        this.x = x;
+    }
+    
+    public void setZ(double z) {
+        this.z = z;
+    }
+    
+    
     
 }

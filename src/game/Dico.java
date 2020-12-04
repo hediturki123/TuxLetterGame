@@ -13,6 +13,9 @@ import org.w3c.dom.Document;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import jdk.internal.org.xml.sax.helpers.DefaultHandler;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -21,7 +24,7 @@ import org.xml.sax.SAXException;
  *
  * @author Alexis YVON, Hedi TURKI SANEKLI
  */
-public class Dico {
+public class Dico extends DefaultHandler {
     
     private ArrayList<String> listeNiveau1;
     private ArrayList<String> listeNiveau2;
@@ -29,8 +32,10 @@ public class Dico {
     private ArrayList<String> listeNiveau4;
     private ArrayList<String> listeNiveau5;
     private String cheminFichierDico;
+    StringBuffer buffer;
     
     public Dico(String cheminFichierDico) {
+        super();
         this.cheminFichierDico = cheminFichierDico;
         listeNiveau1 = new ArrayList<>();
         listeNiveau2 = new ArrayList<>();
@@ -119,7 +124,7 @@ public class Dico {
     
     // Question 8.12
     public void lireDictionnaireDOM(String path, String filename) throws IOException, SAXException, ParserConfigurationException {
-        File dicoXML = new File(path+filename);
+        File dicoXML = new File(path + filename);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.parse(dicoXML);
@@ -135,6 +140,40 @@ public class Dico {
         }
     }
     
+    /*public void lireDictionnaire() {
+   
+    }
+    
+    
+    @Override
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+        if(qName.equals("dictionnaire")) {
+            
+        } else if (qName.equals("mot")){
+            
+        }
+    }
+    
+    @Override
+    public void endElement(String uri, String localName, String qName) throws SAXException {
+    
+    }
+        
+    @Override
+    public void characters(char[] ch, int start, int length) throws SAXException {
+    
+    }
+
+    @Override
+    public void startDocument() throws SAXException {
+    
+    }
+
+    @Override
+    public void endDocument() throws SAXException {
+    
+    } 
+    */
     
     
 }
