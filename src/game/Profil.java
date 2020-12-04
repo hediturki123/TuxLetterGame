@@ -39,16 +39,24 @@ public class Profil {
     }
     
     public Profil(String nomFichier) {
-        _doc = fromXML(nomFichier);
-        nom = _doc.getElementsByTagName("nom").item(0).getTextContent();
-        avatar = _doc.getElementsByTagName("avatar").item(0).getTextContent();
-        String xmldate = _doc.getElementsByTagName("anniversaire").item(0).getTextContent();
-        dateNaissance = Profil.xmlDateToProfileDate(xmldate);
-        NodeList partiesNodeList = _doc.getElementsByTagName("partie");
-        for (int i = 0; i < partiesNodeList.getLength(); i++) {
-            parties.add(new Partie((Element)partiesNodeList.item(i)));
+        
+        try {
+            _doc = fromXML(nomFichier);
+            nom = _doc.getElementsByTagName("nom").item(0).getTextContent();
+            avatar = _doc.getElementsByTagName("avatar").item(0).getTextContent();
+            String xmldate = _doc.getElementsByTagName("anniversaire").item(0).getTextContent();
+            dateNaissance = Profil.xmlDateToProfileDate(xmldate);
+            NodeList partiesNodeList = _doc.getElementsByTagName("partie");
+            parties = new ArrayList<>();
+
+            for (int i = 0; i < partiesNodeList.getLength(); i++) {
+              parties.add(new Partie((Element)partiesNodeList.item(i)));
+            }  
+            present = true;
+            
+        } catch(Exception e) {
+            present = false;
         }
-        present = true;
     }
     
     public boolean charge(String nomJoueur) {
@@ -99,8 +107,15 @@ public class Profil {
 
     @Override
     public String toString() {
-        // TODO
-        return "";
+        String res = "---- Profil :" +
+                " Nom : " + nom + 
+                "\n Avatar : " + avatar +
+                "\n Anniversaire " + dateNaissance +
+                "\n----> Parties :\n";
+        for (Partie p : parties) {
+            res += p.toString();
+        }
+        return res;
     }
     
     public void sauvegarder(String filename) { 
@@ -133,6 +148,7 @@ public class Profil {
             
             // Création de la liste des parties.
             Element partiesElt = _doc.createElement("parties");
+
             parties.forEach(p -> {
                 partiesElt.appendChild(p.getPartie(_doc));
             });
@@ -149,6 +165,7 @@ public class Profil {
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(Profil.class.getName()).log(Level.SEVERE, null, ex);
         }
+        System.out.println(toString());
     } 
     
 /// Takes a date in XML format (i.e. ????-??-??) and returns a date

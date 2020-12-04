@@ -33,12 +33,12 @@ public class Partie {
         if (tempsNodeList.getLength() != 1) {
             temps = 0;
         } else {
-            temps = Integer.parseInt(tempsNodeList.item(0).getTextContent());
+            temps = (int)Double.parseDouble(tempsNodeList.item(0).getTextContent());
         } 
-        
         date = partieElt.getAttribute("date");
         String trouveString = partieElt.getAttribute("trouvé");
-        trouve = Integer.parseInt(trouveString.substring(0, trouveString.length() - 2));
+        trouve = Integer.parseInt(trouveString.substring(0, trouveString.length() - 1));
+      
     }
     
     Element getPartie(Document doc) {
@@ -74,8 +74,11 @@ public class Partie {
     
     @Override
     public String toString() {
-        return "La date de cette partie est : " + date + ", le mot est :" + mot + ", le niveau est : " 
-                + getNiveau() + ", le temps de cette partie est de : " + temps + ", le pourcentage est de : " + trouve + " %.";
+        return "  Date : " + date + 
+                "\n  Mot :" + mot + 
+                "\n  Niveau : " + niveau + 
+                "\n  Temps : " + temps + 
+                "\n  Trouvé : " + trouve + " %";
     }
     
 }

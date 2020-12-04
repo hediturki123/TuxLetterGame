@@ -80,7 +80,7 @@ public abstract class Jeu {
         menuText.addText("3. Sortir du jeu ?", "Principal3", 250, 240);
         menuText.addText("Choisir un niveau : ", "Niveau", 200, 300);
         menuText.addText("Mot à trouver : ", "Mot", 200, 450);
-        menuText.addText("Quelle est votre date de naissance ?", "DateNaissance", 200, 300);
+        menuText.addText("Quelle est votre date de naissance (YYYY-MM-DD) ?", "DateNaissance", 100, 300);
         
     }
 
@@ -216,7 +216,9 @@ public abstract class Jeu {
                             menuText.getText("Mot").clean();
                         }
                     }, 5000);
-
+                    System.out.println("date : " + date);
+                    System.out.println("mot : " + mot);
+                    System.out.println("niveau : " + niveau);
                     partie = new Partie(date, mot, niveau);
                     
                     profil.sauvegarder("src/profil/" + profil.getNom() + ".xml");
@@ -327,7 +329,7 @@ public abstract class Jeu {
 
         // On instancie la liste de lettres du mot à retrouver.
         for (int i = 0; i < partie.getMot().length(); i++) {
-            Lettre l = new Lettre(partie.getMot().charAt(i), (Math.random()*(100-2))+2, (Math.random()*(100-2))+2);
+            Lettre l = new Lettre(partie.getMot().charAt(i), (Math.random() * (100 - 2)) + 2, (Math.random() * (100 - 2)) + 2);
             lettres.add(l);
         }
         
@@ -367,7 +369,7 @@ public abstract class Jeu {
         terminePartie(partie);
         
         profil.ajouterPartie(partie);
-        profil.sauvegarder("src/profil/"+profil.getNom()+".xml");
+        profil.sauvegarder("src/profil/" + profil.getNom() + ".xml");
 
     }
 
