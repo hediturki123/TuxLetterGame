@@ -38,7 +38,6 @@ public class Partie {
         date = partieElt.getAttribute("date");
         String trouveString = partieElt.getAttribute("trouvé");
         trouve = Integer.parseInt(trouveString.substring(0, trouveString.length() - 1));
-      
     }
     
     Element getPartie(Document doc) {

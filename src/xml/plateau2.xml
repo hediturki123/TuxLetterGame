@@ -2,13 +2,13 @@
 <plateau>
 
     <dimensions>
-        <height>100</height>
-        <width>40</width>
-        <depth>50</depth>
+        <height>60</height>
+        <width>100</width>
+        <depth>100</depth>
     </dimensions>
 
     <mapping>
-        <textureBottom>textures/floor/grass2.png</textureBottom>
+        <textureBottom>textures/floor/leaves1.png</textureBottom>
         <textureEast>textures/skybox/interstellar/east.png</textureEast>
         <textureWest>textures/skybox/interstellar/west.png</textureWest>
         <textureNorth>textures/skybox/interstellar/north.png</textureNorth>

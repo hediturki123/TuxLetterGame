@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plateau>
+
+    <dimensions>
+        <height>60</height>
+        <width>100</width>
+        <depth>100</depth>
+    </dimensions>
+
+    <mapping>
+        <textureBottom>textures/floor/paving2.png</textureBottom>
+        <textureEast>textures/skybox/evening/east.png</textureEast>
+        <textureWest>textures/skybox/evening/west.png</textureWest>
+        <textureNorth>textures/skybox/evening/north.png</textureNorth>
+    </mapping>
+
+    <pion>http://url.random/</pion>
+
+</plateau>

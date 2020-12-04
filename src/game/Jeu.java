@@ -25,7 +25,7 @@ public abstract class Jeu {
 
     private final Env env;
     private Tux tux;
-    private final Room mainRoom;
+    private Room mainRoom;
     private final Room menuRoom;
     private LinkedList<Lettre> lettres;
     private Profil profil;
@@ -40,7 +40,7 @@ public abstract class Jeu {
         env = new Env();
 
         // Instancie une Room
-        mainRoom = new Room();
+        //mainRoom = new Room();
 
         // Instancie une autre Room pour les menus
         menuRoom = new Room();
@@ -151,6 +151,31 @@ public abstract class Jeu {
         return anniv;
 
     }
+    
+    public void setRoomTux(int niveau) {
+        switch(niveau) {
+            case 1: 
+                mainRoom = new Room("src/xml/plateau1.xml");
+                env.setRoom(mainRoom);
+                break;
+            case 2:
+                mainRoom = new Room("src/xml/plateau2.xml");
+                env.setRoom(mainRoom);
+                break;
+            case 3:
+                mainRoom = new Room("src/xml/plateau3.xml");
+                env.setRoom(mainRoom);
+                break;
+            case 4:
+                mainRoom = new Room("src/xml/plateau4.xml");
+                env.setRoom(mainRoom);
+                break;
+            case 5:
+                mainRoom = new Room("src/xml/plateau5.xml");
+                env.setRoom(mainRoom);
+                break;
+        }
+    }
 
     
     // fourni, à compléter
@@ -187,7 +212,7 @@ public abstract class Jeu {
             menuText.getText("Jeu4").clean();
 
             // restaure la room du jeu
-            env.setRoom(mainRoom);
+            
             
             if (!lettres.isEmpty()) {
                 lettres.clear();//On clear les lettres qui sont sur le terrain si on s'arret au milieu d'une partie et qu'on veut en lancer un nouvelle
@@ -205,6 +230,8 @@ public abstract class Jeu {
                     
                     niveau = getNiveau();
                     menuText.getText("Niveau").display();
+                    
+                    setRoomTux(niveau);
 
                      // Lecture du dictionnaire.
                     try {
@@ -245,6 +272,7 @@ public abstract class Jeu {
                         chrono("Mot", 5000);
                         
                         partie = new Partie(date, profil.getDernierMot(), profil.getDernierNiveau()); 
+                        setRoomTux(profil.getDernierNiveau());
                         
                     } else {
                         menuText.getText("ChargerErreur").display();
